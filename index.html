@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="แอปเรียน tense และไวยากรณ์อังกฤษระดับ B1 ผ่านเรื่องสั้น ไทม์ไลน์ และแบบฝึกหัด">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Tense Tales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..900&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout concept: a transit map of time. Three lines (Present, Past, Future); each tense is a station. */
+:root {
+  --bg: #f2f5f7;
+  --surface: #ffffff;
+  --ink: #101b2d;
+  --muted: #56667c;
+  --line: #d3dce6;
+  --present: #0e8f9c;
+  --past: #d1710f;
+  --future: #6a4fd8;
+  --ok: #17895a;
+  --bad: #cc3f37;
+  --ok-bg: #e3f5ec;
+  --bad-bg: #fbe8e6;
+  --mark: #fff0b8;
+  --on-line: #ffffff;
+  --f-display: "Archivo", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b111b; --surface: #131b29; --ink: #e8eef6; --muted: #93a3b8; --line: #263246;
+    --present: #3cc6d4; --past: #f0a04b; --future: #a592ff;
+    --ok: #46d39a; --bad: #ff7a70; --ok-bg: #12301f; --bad-bg: #351b1b; --mark: #4a3f10; --on-line: #0b111b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b111b; --surface: #131b29; --ink: #e8eef6; --muted: #93a3b8; --line: #263246;
+  --present: #3cc6d4; --past: #f0a04b; --future: #a592ff;
+  --ok: #46d39a; --bad: #ff7a70; --ok-bg: #12301f; --bad-bg: #351b1b; --mark: #4a3f10; --on-line: #0b111b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); padding-inline: 16px; padding-block: 0 48px; }
+.wrap { max-width: 980px; margin-inline: auto; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--future); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--f-display); font-stretch: 100%; line-height: 1.15; margin: 0; text-wrap: balance; }
+.mono { font-family: var(--f-mono); font-weight: 500; letter-spacing: .04em; }
+.muted { color: var(--muted); }
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-block: 12px 10px; border-bottom: 1px solid var(--line); margin-inline: -16px; padding-inline: 16px; }
+.top-in { max-width: 980px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.brand { font-family: var(--f-display); font-weight: 900; font-stretch: 118%; font-size: 22px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; }
+.brand svg { width: 30px; height: 30px; }
+.nav { display: flex; gap: 4px; margin-inline-start: auto; flex-wrap: wrap; }
+.nav button { background: none; border: 0; padding: 8px 12px; border-radius: 8px; font-weight: 600; color: var(--muted); }
+.nav button[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -3px 0 var(--ink); border-radius: 0; }
+.stats { display: flex; gap: 8px; }
+.pill { font-family: var(--f-mono); font-weight: 500; font-size: 13px; border: 1px solid var(--line); background: var(--surface); padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+
+main { padding-block: 24px 0; }
+
+/* Home: metro map */
+.intro { display: grid; gap: 6px; margin-bottom: 24px; }
+.intro h1 { font-size: clamp(28px, 6vw, 44px); font-weight: 900; font-stretch: 112%; }
+.intro p { margin: 0; max-width: 60ch; color: var(--muted); }
+.map { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 28px 24px; align-items: start; }
+.rail { --c: var(--present); position: relative; display: grid; gap: 14px; padding-inline-start: 34px; }
+.rail.past { --c: var(--past); } .rail.future { --c: var(--future); }
+.rail::before { content: ""; position: absolute; inset-inline-start: 11px; top: 38px; bottom: 26px; width: 8px; border-radius: 4px; background: var(--c); }
+.rail-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.rail-h .badge { background: var(--c); color: var(--on-line); font-family: var(--f-mono); font-size: 12px; padding: 3px 10px; border-radius: 6px; letter-spacing: .08em; }
+.rail-h b { font-family: var(--f-display); font-weight: 800; font-size: 18px; }
+.station { position: relative; display: block; width: 100%; text-align: start; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px 16px; }
+.station::before { content: ""; position: absolute; inset-inline-start: -32px; top: 18px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg); border: 5px solid var(--c); }
+.station.hub::after { content: ""; position: absolute; inset-inline-start: -37px; top: 13px; width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--present); }
+.station:hover { border-color: var(--c); }
+.station .code { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.station h3 { font-size: 20px; font-weight: 800; margin-top: 2px; }
+.station p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.stars { letter-spacing: 2px; font-size: 15px; color: var(--c); margin-top: 6px; display: block; }
+.stars i { font-style: normal; opacity: .25; } .stars i.on { opacity: 1; }
+.hubnote { font-size: 12px; color: var(--present); font-weight: 600; margin-top: 4px; display: block; }
+
+/* Unit page */
+.back { background: none; border: 0; color: var(--muted); padding: 4px 0; font-weight: 500; }
+.uhead { --c: var(--present); display: grid; gap: 4px; padding-block: 8px 18px; }
+.uhead.past { --c: var(--past); } .uhead.future { --c: var(--future); }
+.uhead .code { color: var(--c); }
+.uhead h1 { font-size: clamp(30px, 6vw, 46px); font-weight: 900; font-stretch: 112%; }
+.uhead p { margin: 0; color: var(--muted); }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.tabs button { border: 1px solid var(--line); background: var(--surface); padding: 8px 16px; border-radius: 99px; font-weight: 600; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.panel { display: grid; gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-width: 0; }
+.card h2 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+
+/* Story */
+.tools { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.chat { display: grid; gap: 12px; }
+.msg { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 10px; align-items: start; }
+.av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; background: var(--ink); color: var(--bg); }
+.av.b { background: var(--c); color: var(--on-line); }
+.bubble { background: var(--bg); border: 1px solid var(--line); border-radius: 4px 14px 14px 14px; padding: 10px 14px; text-align: start; width: 100%; }
+.bubble .en { font-size: 18px; }
+.bubble .th { display: none; color: var(--muted); font-size: 15px; margin-top: 4px; }
+.show-th .bubble .th, .bubble.open .th { display: block; }
+mark { background: var(--mark); color: inherit; border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.sw { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+.sw button { width: 44px; height: 26px; border-radius: 99px; border: 1px solid var(--line); background: var(--bg); position: relative; padding: 0; }
+.sw button::after { content: ""; position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: transform .15s; }
+.sw button[aria-pressed="true"] { background: var(--ink); }
+.sw button[aria-pressed="true"]::after { background: var(--bg); transform: translateX(18px); }
+
+/* Rules */
+table.form { width: 100%; border-collapse: collapse; }
+.scroll { overflow-x: auto; }
+table.form th, table.form td { text-align: start; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.form th { font-family: var(--f-mono); font-weight: 500; font-size: 13px; color: var(--muted); }
+table.form td.sign { font-family: var(--f-mono); font-size: 15px; white-space: nowrap; width: 1%; }
+.use { display: grid; gap: 4px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.use:last-child { border-bottom: 0; padding-bottom: 0; }
+.use b { font-weight: 600; }
+.ex { font-size: 17px; border-inline-start: 4px solid var(--c); padding-inline-start: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); border-radius: 99px; padding: 3px 12px; font-size: 14px; background: var(--bg); }
+.mist { display: grid; gap: 4px; padding-block: 10px; border-bottom: 1px solid var(--line); }
+.mist:last-child { border-bottom: 0; }
+.bad { color: var(--bad); } .good { color: var(--ok); }
+.bad::before { content: "✗ "; } .good::before { content: "✓ "; }
+.tip { background: var(--mark); border-radius: 10px; padding: 10px 14px; }
+.irr { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 14px; font-family: var(--f-mono); font-size: 14px; }
+
+/* Timeline */
+.tl { width: 100%; height: auto; display: block; }
+.tl .zone-past { fill: color-mix(in srgb, var(--past) 12%, transparent); }
+.tl .zone-fut { fill: color-mix(in srgb, var(--future) 12%, transparent); }
+.tl .axis { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+.tl .nowline { stroke: var(--present); stroke-width: 3; stroke-dasharray: 5 5; }
+.tl text { font-family: var(--f-body); fill: var(--muted); font-size: 13px; }
+.tl text.zl { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; }
+.tl text.lb { fill: var(--ink); font-weight: 600; font-size: 14px; }
+.tl text.num { fill: var(--on-line); font-weight: 800; font-size: 13px; text-anchor: middle; }
+.tl .m { fill: var(--c); }
+.tl .m2 { fill: var(--c2); }
+.tl .soft { fill: var(--c); opacity: .3; }
+.tl .stroke { stroke: var(--c); fill: none; stroke-width: 3; stroke-linecap: round; }
+.tl .dash { stroke: var(--c); fill: none; stroke-width: 3; stroke-dasharray: 6 6; stroke-linecap: round; }
+.tl .pop { transform-box: fill-box; transform-origin: center; animation: pop .5s both; }
+.tl .soft.pop { animation-name: pop-soft; }
+@keyframes pop { from { transform: scale(.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pop-soft { from { transform: scaleX(.2); opacity: 0; } to { transform: scaleX(1); opacity: .3; } }
+.tlbox { --c: var(--present); --c2: var(--ink); }
+.tlbox.past { --c: var(--past); } .tlbox.future { --c: var(--future); }
+.formula { font-family: var(--f-mono); font-size: 15px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+
+/* Buttons */
+.btn { border: 0; background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 10px; font-weight: 600; min-height: 46px; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn[disabled] { opacity: .35; cursor: default; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* Runner */
+.runner { max-width: 680px; margin-inline: auto; display: grid; gap: 16px; }
+.prog { display: flex; gap: 4px; }
+.prog i { flex: 1; height: 8px; border-radius: 4px; background: var(--line); }
+.prog i.done { background: var(--c, var(--present)); }
+.prog i.cur { background: var(--ink); }
+.q { font-size: clamp(20px, 4.5vw, 26px); font-weight: 500; line-height: 1.4; }
+.q .gap { display: inline-block; min-width: 3.2em; border-bottom: 3px solid var(--ink); text-align: center; color: var(--c, var(--present)); font-weight: 700; }
+.qh { font-family: var(--f-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.opts { display: grid; gap: 10px; }
+.opt { text-align: start; background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 18px; min-height: 52px; }
+.opt:hover { border-color: var(--ink); }
+.opt[aria-pressed="true"] { border-color: var(--ink); background: var(--bg); box-shadow: inset 4px 0 0 var(--ink); }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+input.ans { width: 100%; font: inherit; font-size: 20px; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); }
+.built { min-height: 58px; border-bottom: 3px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; padding-block: 6px; }
+.bank { display: flex; flex-wrap: wrap; gap: 8px; }
+.tile { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 8px 14px; font-size: 18px; min-height: 44px; }
+.tile.used { opacity: .25; pointer-events: none; }
+.fb { border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; }
+.fb.ok { background: var(--ok-bg); border: 1px solid var(--ok); }
+.fb.no { background: var(--bad-bg); border: 1px solid var(--bad); }
+.fb b { font-family: var(--f-display); font-size: 18px; }
+.fb .ans-line { font-size: 17px; font-weight: 600; }
+.result { text-align: center; display: grid; gap: 14px; justify-items: center; padding-block: 24px; }
+.result .big { font-family: var(--f-display); font-weight: 900; font-stretch: 118%; font-size: 64px; line-height: 1; }
+.weak { text-align: start; width: 100%; }
+
+/* Timeline explorer + guess game */
+.tchips { display: flex; gap: 8px; flex-wrap: wrap; }
+.tchip { --c: var(--present); border: 2px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 14px; font-weight: 600; }
+.tchip.past { --c: var(--past); } .tchip.future { --c: var(--future); }
+.tchip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 -4px 0 var(--c); }
+.grid2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.guess .sent { font-size: clamp(20px, 4vw, 26px); font-weight: 500; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="top"><div class="top-in">
+  <button class="brand" id="home" aria-label="หน้าแรก">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--ink)"/><path d="M6 11h20" stroke="var(--present)" stroke-width="3" stroke-linecap="round"/><path d="M6 16h20" stroke="var(--past)" stroke-width="3" stroke-linecap="round"/><path d="M6 21h20" stroke="var(--future)" stroke-width="3" stroke-linecap="round"/></svg>
+    Tense Tales
+  </button>
+  <div class="stats"><span class="pill" id="xp"></span><span class="pill" id="streak"></span></div>
+  <nav class="nav" aria-label="เมนูหลัก">
+    <button data-v="home">แผนที่บทเรียน</button>
+    <button data-v="timeline">ไทม์ไลน์</button>
+    <button data-v="challenge">ชาเลนจ์</button>
+  </nav>
+</div></div>
+
+<div class="wrap"><main id="main"></main></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const hl = (s) => esc(s).replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>');
+const norm = (s) => s.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim().replace(/[.!?]$/, '');
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ───────── Exercise helpers ───────── */
+const mc = (q, o, a, why) => ({ t: 'mc', q, o, a, why });
+const fill = (q, a, why, tip) => ({ t: 'fill', q, a, why, tip });
+const order = (words, th, why) => ({ t: 'order', words, a: words.join(' '), th, why });
+
+/* ───────── Course content ───────── */
+const LINES = {
+  present: { badge: 'PRESENT LINE', th: 'สายปัจจุบัน' },
+  past: { badge: 'PAST LINE', th: 'สายอดีต' },
+  future: { badge: 'FUTURE LINE', th: 'สายอนาคต' },
+};
+
+const UNITS = [
+{
+  id: 'ps', code: 'P1', line: 'present', title: 'Present Simple', th: 'ปัจจุบันธรรมดา', tag: 'กิจวัตร ความจริง ตารางเวลา', tl: 'habit',
+  story: { title: 'Mai ทำงานที่คาเฟ่', lines: [
+    ['Mai', 'I [[work]] at a small café near the station.', 'ฉันทำงานที่คาเฟ่เล็กๆ ใกล้สถานี'],
+    ['Mai', 'It [[opens]] at six, so I [[get up]] at five every day.', 'คาเฟ่เปิดหกโมง ฉันเลยตื่นตีห้าทุกวัน'],
+    ['Tom', '[[Does]] your boss [[like]] early birds?', 'เจ้านายคุณชอบคนตื่นเช้าไหม'],
+    ['Mai', 'He [[doesn\'t care]]. He just [[wants]] fresh coffee at six!', 'เขาไม่สนหรอก เขาแค่อยากได้กาแฟสดตอนหกโมง'],
+    ['Tom', 'Fair enough. The sun [[rises]] early in summer anyway.', 'ก็ยุติธรรมดี หน้าร้อนดวงอาทิตย์ก็ขึ้นเช้าอยู่แล้ว'],
+  ] },
+  rules: {
+    form: [['+', 'I / you / we / they work', 'he / she / it work<b>s</b>'], ['−', 'I / you / we / they <b>don\'t</b> work', 'he / she / it <b>doesn\'t</b> work'], ['?', '<b>Do</b> I / you / we / they work?', '<b>Does</b> he / she / it work?']],
+    uses: [
+      ['กิจวัตรและนิสัย', 'I get up at five every day.'],
+      ['ความจริงที่เป็นอยู่เสมอ', 'The sun rises in the east.'],
+      ['ตารางเวลาที่แน่นอน (รถ หนัง คลาส)', 'The train leaves at 8:15.'],
+    ],
+    signals: ['always', 'usually', 'often', 'sometimes', 'never', 'every day', 'on Mondays', 'once a week'],
+    mistakes: [
+      ['She work here.', 'She works here.', 'he / she / it ต้องเติม -s หรือ -es ท้ายกริยา'],
+      ['Does she works here?', 'Does she work here?', 'มี does ช่วยแล้ว กริยากลับไปเป็นรูปเดิม'],
+      ['He don\'t like fish.', 'He doesn\'t like fish.', 'he / she / it ใช้ doesn\'t ไม่ใช่ don\'t'],
+    ],
+    tip: 'เติม -es หลัง s, sh, ch, x, o (goes, watches) และ พยัญชนะ+y เปลี่ยนเป็น -ies (study → studies)',
+  },
+  ex: [
+    mc('My sister ___ in a bank.', ['work', 'works', 'is work'], 1, 'she เป็นบุรุษที่สาม เอกพจน์ กริยาต้องเติม -s'),
+    mc('___ you often play football?', ['Do', 'Does', 'Are'], 0, 'you ใช้ Do ในประโยคคำถาม Present Simple'),
+    fill('He ___ TV every evening. (watch)', ['watches'], 'ลงท้ายด้วย ch เติม -es: watch → watches'),
+    fill('She ___ spicy food. (not like)', ['doesn\'t like', 'does not like'], 'ปฏิเสธ he / she / it ใช้ doesn\'t + กริยาช่อง 1 (ไม่เติม -s)'),
+    order(['Does', 'your', 'brother', 'speak', 'English?'], 'พี่ชายหรือน้องชายของคุณพูดภาษาอังกฤษไหม', 'Does + ประธาน + กริยาช่อง 1'),
+    mc('Water ___ at 100 degrees.', ['boils', 'is boiling', 'boil'], 0, 'ความจริงทางวิทยาศาสตร์ ใช้ Present Simple'),
+    mc('The film ___ at 7:30 tonight.', ['starts', 'start', 'starting'], 0, 'ตารางเวลาที่แน่นอนใช้ Present Simple'),
+  ],
+},
+{
+  id: 'pc', code: 'P2', line: 'present', title: 'Present Continuous', th: 'ปัจจุบันกำลังดำเนินอยู่', tag: 'ตอนนี้ ช่วงนี้ นัดหมายที่ตกลงแล้ว', tl: 'now',
+  story: { title: 'Tom โทรหา Mai', lines: [
+    ['Tom', 'Hi Mai! What are you [[doing]] right now?', 'หวัดดีไหม ตอนนี้ทำอะไรอยู่'],
+    ['Mai', 'I\'m [[making]] a latte. It\'s very busy today!', 'กำลังทำลาเต้อยู่ วันนี้ยุ่งมาก'],
+    ['Tom', 'Are you [[working]] all day?', 'ทำงานทั้งวันเลยเหรอ'],
+    ['Mai', 'No, I\'m [[finishing]] at two. Then I\'m [[meeting]] Anna for lunch.', 'เปล่า เลิกบ่ายสอง แล้วนัดเจอแอนนาทานข้าวกลางวัน'],
+    ['Tom', 'Nice. By the way, I\'m [[standing]] outside your café!', 'ดีเลย ว่าแต่ตอนนี้ผมยืนอยู่หน้าคาเฟ่คุณนะ'],
+  ] },
+  rules: {
+    form: [['+', 'I <b>am</b> working', 'he / she / it <b>is</b> working · we / you / they <b>are</b> working'], ['−', 'I\'m <b>not</b> working', 'he <b>isn\'t</b> working · they <b>aren\'t</b> working'], ['?', '<b>Am</b> I working?', '<b>Is</b> he working? · <b>Are</b> they working?']],
+    uses: [
+      ['กำลังทำอยู่ตอนนี้', 'She is talking on the phone now.'],
+      ['ช่วงนี้ หรือชั่วคราว', 'I\'m reading a great book these days.'],
+      ['นัดหมายในอนาคตที่ตกลงไว้แล้ว', 'We\'re flying to Phuket on Friday.'],
+    ],
+    signals: ['now', 'right now', 'at the moment', 'today', 'these days', 'Look!', 'Listen!'],
+    mistakes: [
+      ['I am knowing the answer.', 'I know the answer.', 'กริยาแสดงสภาวะ (know, like, want, need, understand) ไม่ใช้ -ing'],
+      ['She working now.', 'She is working now.', 'ต้องมี am / is / are นำหน้ากริยา -ing'],
+      ['Are you wanting tea?', 'Do you want tea?', 'want เป็นกริยาแสดงสภาวะ ใช้ Present Simple'],
+    ],
+    tip: 'การสะกด: write → writing (ตัด e), run → running (ซ้ำพยัญชนะ), lie → lying',
+  },
+  ex: [
+    mc('Be quiet! The baby ___.', ['sleeps', 'is sleeping', 'sleep'], 1, 'Be quiet! บอกว่าตอนนี้กำลังหลับอยู่ ใช้ Present Continuous'),
+    mc('Look! It ___ outside.', ['rains', 'is raining', 'rain'], 1, 'Look! ชี้ให้ดูสิ่งที่เกิดขึ้นตอนนี้'),
+    fill('They ___ football at the moment. (play)', ['are playing', '\'re playing'], 'at the moment + are + กริยา -ing'),
+    fill('I ___ today. It\'s a holiday. (not work)', ['am not working', '\'m not working'], 'ปฏิเสธ: I am not + กริยา -ing'),
+    order(['What', 'are', 'you', 'doing', 'right', 'now?'], 'ตอนนี้คุณกำลังทำอะไรอยู่', 'Wh- + are + you + กริยา -ing'),
+    mc('We ___ to the cinema tonight. I\'ve already bought the tickets.', ['are going', 'go', 'goes'], 0, 'นัดหมายที่ตกลงแล้ว ใช้ Present Continuous พูดถึงอนาคต'),
+    mc('Which sentence is correct?', ['I am wanting a coffee.', 'I want a coffee.', 'I\'m want a coffee.'], 1, 'want เป็นกริยาแสดงสภาวะ ไม่ใช้ -ing'),
+  ],
+},
+{
+  id: 'pa', code: 'A1', line: 'past', title: 'Past Simple', th: 'อดีตธรรมดา', tag: 'เรื่องที่จบแล้วในอดีต', tl: 'point',
+  story: { title: 'สุดสัปดาห์ที่แล้ว', lines: [
+    ['Tom', 'How was your weekend?', 'สุดสัปดาห์เป็นยังไงบ้าง'],
+    ['Mai', 'Great! On Saturday I [[went]] to the beach with Anna.', 'สุดยอด! วันเสาร์ฉันไปชายหาดกับแอนนา'],
+    ['Tom', '[[Did]] you [[swim]]?', 'ได้ว่ายน้ำไหม'],
+    ['Mai', 'No, the water [[was]] too cold. We [[walked]] along the sand and [[ate]] ice cream instead.', 'ไม่ น้ำเย็นเกินไป เราเดินเลียบหาดทรายแล้วกินไอศกรีมแทน'],
+    ['Tom', 'I [[stayed]] home and [[watched]] three films. I [[didn\'t]] even [[go]] outside!', 'ผมอยู่บ้านดูหนังสามเรื่อง ไม่ได้ออกนอกบ้านเลยด้วยซ้ำ'],
+  ] },
+  rules: {
+    form: [['+', 'I / he / we / they work<b>ed</b> (ปกติ) · <b>went</b> (ไม่ปกติ)', 'กริยาช่อง 2 ใช้เหมือนกันทุกประธาน'], ['−', 'I / he / we / they <b>didn\'t</b> work', 'didn\'t + กริยาช่อง 1'], ['?', '<b>Did</b> you work?', 'Did + ประธาน + กริยาช่อง 1']],
+    uses: [
+      ['เหตุการณ์ที่จบแล้ว มักบอกเวลาในอดีต', 'I visited Chiang Mai last year.'],
+      ['เหตุการณ์ต่อเนื่องตามลำดับ', 'She opened the door, saw a cat and smiled.'],
+      ['นิสัยหรือสถานการณ์ในอดีตที่ไม่เป็นแล้ว', 'When I was a child, I played outside every day.'],
+    ],
+    signals: ['yesterday', 'last week', 'in 2019', 'two days ago', 'when I was ten', 'then'],
+    irr: ['go – went', 'see – saw', 'eat – ate', 'buy – bought', 'have – had', 'make – made', 'take – took', 'come – came', 'get – got', 'write – wrote', 'meet – met', 'say – said'],
+    mistakes: [
+      ['Did you went there?', 'Did you go there?', 'มี did แล้ว กริยากลับเป็นช่อง 1'],
+      ['I didn\'t saw him.', 'I didn\'t see him.', 'didn\'t + กริยาช่อง 1 เสมอ'],
+      ['She buyed a bag.', 'She bought a bag.', 'buy เป็นกริยาไม่ปกติ ต้องจำช่อง 2'],
+    ],
+    tip: 'การสะกด: stop → stopped, study → studied, like → liked',
+  },
+  ex: [
+    mc('I ___ a great film yesterday.', ['see', 'saw', 'seen'], 1, 'yesterday ใช้ Past Simple และ see เป็นกริยาไม่ปกติ: saw'),
+    mc('___ she call you last night?', ['Did', 'Does', 'Was'], 0, 'คำถาม Past Simple ใช้ Did'),
+    fill('We ___ this sofa two years ago. (buy)', ['bought'], 'buy – bought (กริยาไม่ปกติ)'),
+    fill('He ___ the exam. (not pass)', ['didn\'t pass', 'did not pass'], 'ปฏิเสธ: didn\'t + กริยาช่อง 1'),
+    order(['Where', 'did', 'you', 'go', 'last', 'summer?'], 'ฤดูร้อนที่แล้วคุณไปไหนมา', 'Wh- + did + ประธาน + กริยาช่อง 1'),
+    mc('She ___ to the party because she was tired.', ['didn\'t go', 'doesn\'t go', 'didn\'t went'], 0, 'didn\'t + go (ช่อง 1)'),
+    mc('When I ___ ten, I lived in Chiang Mai.', ['am', 'was', 'were'], 1, 'be ในอดีต: I / he / she / it = was'),
+  ],
+},
+{
+  id: 'pco', code: 'A2', line: 'past', title: 'Past Continuous', th: 'อดีตกำลังดำเนินอยู่', tag: 'ฉากหลัง และเหตุการณ์ที่ถูกขัดจังหวะ', tl: 'span',
+  story: { title: 'คืนไฟดับ', lines: [
+    ['Mai', 'Last night, I [[was cooking]] dinner when the lights [[went]] out.', 'เมื่อคืนฉันกำลังทำอาหารเย็นอยู่ ไฟก็ดับพอดี'],
+    ['Tom', 'What [[were]] you [[doing]] exactly?', 'ตอนนั้นคุณกำลังทำอะไรอยู่เหรอ'],
+    ['Mai', 'I [[was stirring]] the soup, and my cat [[was sleeping]] next to me.', 'ฉันกำลังคนซุป และแมวนอนหลับอยู่ข้างๆ'],
+    ['Tom', 'Then what happened?', 'แล้วเกิดอะไรขึ้น'],
+    ['Mai', 'The cat [[jumped]] up and the soup [[fell]] on the floor. While I [[was cleaning]], the power came back!', 'แมวกระโดดขึ้น ซุปหกลงพื้น ขณะที่ฉันกำลังเช็ดอยู่ ไฟก็กลับมา!'],
+  ] },
+  rules: {
+    form: [['+', 'I / he / she / it <b>was</b> working', 'you / we / they <b>were</b> working'], ['−', 'I <b>wasn\'t</b> working', 'we <b>weren\'t</b> working'], ['?', '<b>Was</b> he working?', '<b>Were</b> you working?']],
+    uses: [
+      ['กำลังทำอยู่ ณ เวลาหนึ่งในอดีต', 'At 8 p.m. yesterday, I was watching TV.'],
+      ['เหตุการณ์ยาว (continuous) ถูกขัดจังหวะด้วยเหตุการณ์สั้น (simple)', 'I was walking home when it started to rain.'],
+      ['สองเหตุการณ์เกิดพร้อมกัน (while)', 'While she was cooking, he was setting the table.'],
+    ],
+    signals: ['while', 'when', 'at 8 p.m. yesterday', 'all evening', 'at that moment'],
+    mistakes: [
+      ['I cooking when he called.', 'I was cooking when he called.', 'ต้องมี was / were นำหน้ากริยา -ing'],
+      ['We were knowing the answer.', 'We knew the answer.', 'กริยาแสดงสภาวะไม่ใช้ -ing ใช้ Past Simple'],
+      ['I was losing my keys while I was running.', 'I lost my keys while I was running.', 'การทำหายเป็นเหตุการณ์สั้น ใช้ Past Simple'],
+    ],
+    tip: 'จำง่ายๆ: ฉากหลังที่ยาว = was / were + -ing, เหตุการณ์สั้นที่แทรกเข้ามา = Past Simple',
+  },
+  ex: [
+    mc('At nine o\'clock last night, I ___ a book.', ['read', 'was reading', 'am reading'], 1, 'ณ เวลาหนึ่งในอดีต กำลังทำอยู่ ใช้ Past Continuous'),
+    mc('She ___ when the phone rang.', ['slept', 'was sleeping', 'sleeps'], 1, 'การนอนเป็นเหตุการณ์ยาว ถูกเสียงโทรศัพท์ (สั้น) ขัดจังหวะ'),
+    fill('They ___ cards when the lights went out. (play)', ['were playing'], 'they + were + กริยา -ing'),
+    fill('I ___ when the teacher explained it. (not listen)', ['wasn\'t listening', 'was not listening'], 'ปฏิเสธ: wasn\'t + กริยา -ing'),
+    mc('While we ___ dinner, the doorbell rang.', ['have', 'were having', 'will have'], 1, 'while + เหตุการณ์ที่กำลังดำเนินอยู่ในอดีต'),
+    order(['What', 'were', 'you', 'doing', 'at', 'midnight?'], 'ตอนเที่ยงคืนคุณกำลังทำอะไรอยู่', 'Wh- + were + you + กริยา -ing'),
+    mc('I ___ my keys while I was running.', ['lost', 'was losing', 'lose'], 0, 'การทำของหายเกิดขึ้นครั้งเดียว ใช้ Past Simple'),
+  ],
+},
+{
+  id: 'pp', code: 'A3', line: 'past', hub: true, title: 'Present Perfect', th: 'ปัจจุบันสมบูรณ์', tag: 'อดีตที่เชื่อมมาถึงตอนนี้', tl: 'perfect',
+  story: { title: 'ทริปแรกของ Mai', lines: [
+    ['Tom', '[[Have]] you ever [[been]] to Japan?', 'เคยไปญี่ปุ่นไหม'],
+    ['Mai', 'Yes! I\'ve [[visited]] Tokyo twice. I [[went]] first in 2022, and again last spring.', 'เคย! ฉันไปโตเกียวมาสองครั้ง ครั้งแรกปี 2022 และอีกครั้งฤดูใบไม้ผลิที่แล้ว'],
+    ['Tom', 'Wow. I\'ve [[never left]] Thailand.', 'ว้าว ผมไม่เคยออกนอกประเทศไทยเลย'],
+    ['Mai', 'Really? [[Have]] you [[tried]] sushi at least?', 'จริงเหรอ แล้วเคยลองซูชิไหม'],
+    ['Tom', 'Not yet. But I\'ve just [[booked]] a ticket to Osaka!', 'ยังเลย แต่ผมเพิ่งจองตั๋วไปโอซากา!'],
+  ] },
+  rules: {
+    form: [['+', 'I / you / we / they <b>have</b> worked', 'he / she / it <b>has</b> worked'], ['−', 'I <b>haven\'t</b> worked', 'she <b>hasn\'t</b> worked'], ['?', '<b>Have</b> you worked?', '<b>Has</b> she worked?']],
+    uses: [
+      ['ประสบการณ์ในชีวิต (ไม่บอกเวลาที่ชัดเจน)', 'I\'ve been to Japan twice.'],
+      ['อดีตที่ยังเกี่ยวกับตอนนี้ (ผลลัพธ์)', 'I\'ve lost my keys. (ตอนนี้ยังหาไม่เจอ)'],
+      ['เริ่มในอดีตและยังต่อเนื่อง (for / since)', 'She has lived here for ten years.'],
+    ],
+    signals: ['ever', 'never', 'already', 'yet', 'just', 'so far', 'for', 'since', 'recently'],
+    irr: ['be – been', 'go – gone / been', 'see – seen', 'eat – eaten', 'do – done', 'write – written', 'take – taken', 'buy – bought', 'have – had'],
+    mistakes: [
+      ['I have seen him yesterday.', 'I saw him yesterday.', 'yesterday คือเวลาในอดีตที่ชัดเจน ต้องใช้ Past Simple'],
+      ['She has live here since 2019.', 'She has lived here since 2019.', 'have / has + กริยาช่อง 3'],
+      ['I am here for two hours.', 'I have been here for two hours.', 'for + ระยะเวลาที่ต่อเนื่องถึงตอนนี้ ใช้ Present Perfect'],
+    ],
+    tip: 'for + ระยะเวลา (for 3 years) · since + จุดเริ่มต้น (since 2020) · ถ้าบอกเวลาอดีตชัดเจน (yesterday, in 2022) ให้ใช้ Past Simple',
+  },
+  ex: [
+    mc('I have never ___ sushi.', ['eat', 'ate', 'eaten'], 2, 'have + กริยาช่อง 3: eat – ate – eaten'),
+    mc('She ___ in London since 2019.', ['lived', 'has lived', 'lives'], 1, 'since 2019 เริ่มในอดีตและยังอยู่ ใช้ Present Perfect'),
+    fill('We ___ the project. (already / finish)', ['have already finished', '\'ve already finished'], 'have + already + กริยาช่อง 3'),
+    fill('He ___ here for ten years. (live)', ['has lived', '\'s lived'], 'he + has + กริยาช่อง 3'),
+    mc('I ___ him yesterday.', ['have seen', 'saw', 'see'], 1, 'yesterday คือเวลาที่ชัดเจน ต้องใช้ Past Simple'),
+    order(['Have', 'you', 'ever', 'been', 'to', 'Japan?'], 'คุณเคยไปญี่ปุ่นไหม', 'Have + ประธาน + ever + กริยาช่อง 3'),
+    mc('She has lived here ___ 2019.', ['for', 'since', 'during'], 1, '2019 คือจุดเริ่มต้น ใช้ since (for ใช้กับระยะเวลา)'),
+  ],
+},
+{
+  id: 'ppf', code: 'A4', line: 'past', title: 'Past Perfect', th: 'อดีตสมบูรณ์', tag: 'เกิดก่อนอีกเหตุการณ์ในอดีต', tl: 'before',
+  story: { title: 'รถไฟขบวนที่ตกไป', lines: [
+    ['Mai', 'When I [[arrived]] at the station, the train [[had left]].', 'พอฉันถึงสถานี รถไฟออกไปแล้ว'],
+    ['Tom', 'Oh no! [[Had]] you [[checked]] the time before you left home?', 'ตายจริง ก่อนออกจากบ้านเช็กเวลาไว้หรือเปล่า'],
+    ['Mai', 'No, I [[hadn\'t]]. I [[had forgotten]] my phone, so I [[went]] back for it.', 'ไม่ได้เช็ก ฉันลืมโทรศัพท์ เลยต้องกลับไปเอา'],
+    ['Tom', 'So the phone made you miss the train!', 'โทรศัพท์ทำให้คุณตกรถไฟเลยสินะ'],
+    ['Mai', 'Yes. After I [[had waited]] for an hour, I finally [[caught]] the next one.', 'ใช่ พอรอไปหนึ่งชั่วโมง ในที่สุดก็ขึ้นขบวนถัดไปได้'],
+  ] },
+  rules: {
+    form: [['+', 'I / you / he / we / they <b>had</b> worked', 'ใช้ had กับทุกประธาน'], ['−', 'I <b>hadn\'t</b> worked', 'hadn\'t + กริยาช่อง 3'], ['?', '<b>Had</b> you worked?', 'Had + ประธาน + กริยาช่อง 3']],
+    uses: [
+      ['เหตุการณ์ที่เกิดก่อนอีกเหตุการณ์ในอดีต', 'When I arrived, the film had started. (หนังเริ่มก่อน)'],
+      ['อธิบายสาเหตุของสิ่งที่เกิดในอดีต', 'She was tired because she hadn\'t slept.'],
+    ],
+    signals: ['before', 'after', 'when', 'by the time', 'already', 'just', 'never … before'],
+    irr: ['leave – left', 'forget – forgotten', 'go – gone', 'eat – eaten', 'see – seen', 'finish – finished'],
+    mistakes: [
+      ['When I arrived, the film started.', 'When I arrived, the film had started.', 'ถ้าหนังเริ่มก่อนที่ฉันจะถึง ต้องใช้ had started'],
+      ['She had went home.', 'She had gone home.', 'had + กริยาช่อง 3 (go – went – gone)'],
+      ['I had not saw him before.', 'I hadn\'t seen him before.', 'hadn\'t + กริยาช่อง 3'],
+    ],
+    tip: 'ถ้าเล่าเรื่องตามลำดับเวลา ใช้ Past Simple ได้เลย (I got up, had breakfast and left.) ใช้ Past Perfect เฉพาะตอนต้องย้อนไปเล่าเหตุการณ์ที่เกิดก่อน',
+  },
+  ex: [
+    mc('By the time I got to the station, the train ___.', ['left', 'had left', 'leaves'], 1, 'รถไฟออกก่อนที่ฉันจะถึง ใช้ Past Perfect'),
+    mc('When we arrived, the film ___.', ['started', 'had started', 'was start'], 1, 'หนังเริ่มก่อนที่เราจะมาถึง'),
+    fill('After she ___ her homework, she watched TV. (finish)', ['had finished'], 'เสร็จการบ้านก่อนดูทีวี: had + กริยาช่อง 3'),
+    fill('I ___ sushi before that trip. (never / eat)', ['had never eaten', 'hadn\'t eaten'], 'had never + กริยาช่อง 3'),
+    mc('Which is correct?', ['She had went home.', 'She had gone home.', 'She had go home.'], 1, 'had + กริยาช่อง 3: go – went – gone'),
+    order(['They', 'had', 'already', 'left', 'when', 'I', 'arrived.'], 'ตอนที่ฉันมาถึง พวกเขาออกไปแล้ว', 'had + already + กริยาช่อง 3'),
+    mc('Which happened first? "When Tom called, Mai had gone out."', ['Tom called', 'Mai went out', 'At the same time'], 1, 'had gone out คือเหตุการณ์ที่เกิดก่อน'),
+  ],
+},
+{
+  id: 'fu', code: 'F1', line: 'future', title: 'Will / Going to', th: 'อนาคต will และ be going to', tag: 'ตัดสินใจทันที แผนที่วางไว้ การทำนาย', tl: 'future',
+  story: { title: 'แผนซัมเมอร์', lines: [
+    ['Mai', 'This summer, I\'m [[going to]] learn to surf.', 'ซัมเมอร์นี้ฉันจะไปเรียนเล่นเซิร์ฟ'],
+    ['Tom', 'Really? I think you [[will]] love it.', 'จริงเหรอ ผมว่าคุณต้องชอบแน่ๆ'],
+    ['Mai', 'I\'ve already booked the lessons. They start next week.', 'ฉันจองคลาสไว้แล้ว เริ่มสัปดาห์หน้า'],
+    ['Tom', 'Look at the sky! It\'s [[going to]] rain this afternoon.', 'ดูท้องฟ้าสิ! บ่ายนี้ฝนจะตกแน่'],
+    ['Mai', 'Oh no, I forgot my umbrella.', 'ตายจริง ฉันลืมร่ม'],
+    ['Tom', 'Don\'t worry, [[I\'ll]] lend you mine.', 'ไม่ต้องห่วง เดี๋ยวผมให้ยืมของผมเอง'],
+    ['Mai', 'Thanks! I [[won\'t]] forget it again.', 'ขอบใจ ฉันจะไม่ลืมอีกแล้ว'],
+  ] },
+  rules: {
+    form: [['will', 'I <b>will</b> go · I\'ll go', 'I <b>won\'t</b> go · <b>Will</b> you go?'], ['going to', 'I <b>am going to</b> go', 'he <b>is going to</b> go · they <b>are going to</b> go'], ['นัดหมาย', 'I <b>am meeting</b> Anna at 5', 'Present Continuous ใช้กับแผนที่นัดแน่นอนแล้ว']],
+    uses: [
+      ['will: ตัดสินใจทันที ณ ตอนพูด', 'It\'s cold. I\'ll close the window.'],
+      ['will: คำทำนายจากความเห็น (I think / probably) สัญญา เสนอช่วย', 'I think it will be a great year. · I\'ll help you with that.'],
+      ['going to: แผนที่ตัดสินใจไว้แล้ว', 'I\'m going to study medicine.'],
+      ['going to: ทำนายจากหลักฐานที่เห็นตอนนี้', 'Look at those clouds! It\'s going to rain.'],
+    ],
+    signals: ['tomorrow', 'next week', 'soon', 'in two days', 'tonight', 'I think', 'probably'],
+    mistakes: [
+      ['I will to go.', 'I will go.', 'will + กริยาช่อง 1 ไม่มี to'],
+      ['She will goes home.', 'She will go home.', 'หลัง will กริยาไม่เติม -s'],
+      ['The phone is ringing. I\'m going to answer it.', 'The phone is ringing. I\'ll answer it.', 'ตัดสินใจทันที ใช้ will'],
+    ],
+    tip: 'ถามตัวเองว่า "ตัดสินใจไว้ก่อนแล้วหรือเพิ่งตัดสินใจตอนนี้" ถ้าก่อนแล้ว = going to, ถ้าตอนนี้ = will',
+  },
+  ex: [
+    mc('The phone is ringing. I ___ get it!', ['\'ll', '\'m going to', '\'m getting'], 0, 'ตัดสินใจทันที ณ ตอนพูด ใช้ will'),
+    mc('Look at those black clouds! It ___ rain.', ['will', 'is going to', 'is raining'], 1, 'มีหลักฐานที่เห็นอยู่ตอนนี้ (เมฆดำ) ใช้ going to'),
+    fill('I think she ___ the exam easily. (pass)', ['will pass', '\'ll pass'], 'I think + will + กริยาช่อง 1 (ความเห็น)'),
+    fill('We ___ late, I promise. (not / be)', ['won\'t be', 'will not be'], 'สัญญา ใช้ will; ปฏิเสธ won\'t + be'),
+    mc('I\'ve decided! I ___ a new phone next week.', ['will buy', 'am going to buy', 'buy'], 1, 'ตัดสินใจไว้แล้ว ใช้ be going to'),
+    order(['I', 'am', 'going', 'to', 'visit', 'my', 'grandma', 'tomorrow.'], 'พรุ่งนี้ฉันจะไปเยี่ยมคุณยาย', 'be going to + กริยาช่อง 1'),
+    mc('Which sentence is correct?', ['I will to call you.', 'I will call you.', 'I will calling you.'], 1, 'will + กริยาช่อง 1'),
+  ],
+},
+{
+  id: 'c1', code: 'F2', line: 'future', title: 'First Conditional', th: 'ประโยคเงื่อนไขแบบที่ 1', tag: 'ถ้า…แล้วจะ…', tl: 'branch',
+  story: { title: 'สัปดาห์สอบ', lines: [
+    ['Tom', 'If I [[study]] tonight, I [[\'ll pass]] the test tomorrow.', 'ถ้าคืนนี้ผมอ่านหนังสือ พรุ่งนี้ผมจะสอบผ่าน'],
+    ['Mai', 'And if you [[don\'t sleep]], you [[won\'t remember]] anything!', 'แล้วถ้าไม่นอน คุณจะจำอะไรไม่ได้เลยนะ'],
+    ['Tom', 'True. If I [[finish]] by ten, I [[will go]] to bed.', 'จริง ถ้าผมอ่านเสร็จก่อนสี่ทุ่ม ผมจะเข้านอน'],
+    ['Mai', '[[Unless]] you [[drink]] too much coffee, you\'ll sleep fine.', 'ถ้าไม่ดื่มกาแฟมากเกินไป ก็จะหลับสบาย'],
+    ['Tom', 'Deal. If you [[see]] me with a third cup, [[stop]] me!', 'ตกลง ถ้าเห็นผมถือแก้วที่สาม ห้ามผมด้วยนะ'],
+  ] },
+  rules: {
+    form: [['+', '<b>If</b> + Present Simple,', '<b>will</b> + กริยาช่อง 1'], ['−', 'If it <b>doesn\'t</b> rain,', 'we <b>won\'t</b> stay home'], ['สลับ', 'We will stay home <b>if</b> it rains.', 'สลับตำแหน่งได้ ไม่ต้องใส่จุลภาค']],
+    uses: [
+      ['สถานการณ์ที่เป็นไปได้ในอนาคตและผลที่ตามมา', 'If it rains, we\'ll stay home.'],
+      ['คำเตือน สัญญา ข้อเสนอ', 'If you touch that, you\'ll get burned.'],
+      ['unless = if … not', 'Unless you hurry, you\'ll miss the bus.'],
+    ],
+    signals: ['if', 'unless', 'as soon as', 'when', 'in case'],
+    mistakes: [
+      ['If it will rain, we will stay home.', 'If it rains, we will stay home.', 'หลัง if ใช้ Present Simple ไม่ใช้ will'],
+      ['If I will see him, I will tell him.', 'If I see him, I will tell him.', 'เหมือนกัน: if + Present Simple'],
+      ['If she studies, she will to pass.', 'If she studies, she will pass.', 'will + กริยาช่อง 1 ไม่มี to'],
+    ],
+    tip: 'เงื่อนไขพูดถึงอนาคต แต่ฝั่ง if ใช้ Present Simple เสมอ ส่วนผลลัพธ์ใช้ will',
+  },
+  ex: [
+    mc('If it ___ tomorrow, we\'ll stay at home.', ['rains', 'will rain', 'rained'], 0, 'หลัง if ใช้ Present Simple'),
+    mc('If you ___ hard, you\'ll pass the exam.', ['study', 'will study', 'studied'], 0, 'if + Present Simple, will + กริยา'),
+    fill('If I ___ him, I\'ll tell him. (see)', ['see'], 'หลัง if ใช้ Present Simple: I see'),
+    fill('She ___ angry if you forget her birthday. (be)', ['will be', '\'ll be'], 'ผลลัพธ์ใช้ will + กริยาช่อง 1'),
+    mc('___ you hurry, you\'ll miss the bus.', ['Unless', 'If', 'When'], 0, 'unless = if … not (ถ้าคุณไม่รีบ)'),
+    order(['If', 'it', 'rains,', 'we', 'will', 'stay', 'home.'], 'ถ้าฝนตก เราจะอยู่บ้าน', 'If + Present Simple, will + กริยาช่อง 1'),
+    mc('Which sentence is correct?', ['If it will be sunny, we\'ll go out.', 'If it is sunny, we\'ll go out.', 'If it was sunny, we\'ll go out.'], 1, 'if + Present Simple, will + กริยา'),
+  ],
+},
+];
+const BYID = Object.fromEntries(UNITS.map((u) => [u.id, u]));
+
+const GUESS = [
+  ['I usually take the bus to work.', 'ps', 'usually บอกนิสัยประจำ'],
+  ['Shh! The baby is sleeping.', 'pc', 'Shh! บอกว่าตอนนี้กำลังเกิดขึ้น'],
+  ['We visited the museum last Sunday.', 'pa', 'last Sunday คือเวลาอดีตที่ชัดเจน'],
+  ['I was walking home when it started to rain.', 'pco', 'เหตุการณ์ยาว (was walking) ถูกเหตุการณ์สั้น (started) ขัดจังหวะ'],
+  ['She has lived in Phuket since 2018.', 'pp', 'since 2018 เริ่มในอดีตและยังต่อเนื่องถึงตอนนี้'],
+  ['When I got there, they had already eaten.', 'ppf', 'already และเกิดก่อน "got there"'],
+  ['I\'m going to start a new job in May.', 'fu', 'แผนที่ตัดสินใจไว้แล้ว'],
+  ['If you study, you will pass.', 'c1', 'If + Present Simple, will + กริยา'],
+  ['Water freezes at 0°C.', 'ps', 'ความจริงทางวิทยาศาสตร์'],
+  ['Right now, Tom is standing outside the café.', 'pc', 'right now = ตอนนี้'],
+  ['Have you ever been to Japan?', 'pp', 'ถามประสบการณ์โดยไม่บอกเวลา'],
+  ['I\'ll help you with those bags.', 'fu', 'เสนอช่วยทันที ใช้ will'],
+  ['What were you doing at nine last night?', 'pco', 'ถามสิ่งที่กำลังทำอยู่ ณ เวลาหนึ่งในอดีต'],
+  ['He didn\'t call me yesterday.', 'pa', 'yesterday + didn\'t + กริยาช่อง 1'],
+  ['By the time we arrived, the shop had closed.', 'ppf', 'ร้านปิดก่อนที่เราจะถึง'],
+  ['Unless you hurry, you will miss the train.', 'c1', 'unless = if … not'],
+];
+
+/* ───────── Timeline drawing ───────── */
+function timeline(kind) {
+  const y = 86, now = 300;
+  const T = (x, yy, txt, cls = '') => `<text x="${x}" y="${yy}" text-anchor="middle" class="${cls}">${esc(txt)}</text>`;
+  const dot = (x, r, cls = 'm', d = 0) => `<circle class="${cls} pop" style="animation-delay:${d}ms" cx="${x}" cy="${y}" r="${r}"/>`;
+  let body = '';
+  if (kind === 'habit') {
+    [60, 120, 180, 240, 300, 360, 420, 480, 540].forEach((x, i) => { body += dot(x, 7, 'm', i * 60); });
+    body += T(300, 44, 'ทำซ้ำเป็นประจำ ทั้งอดีต ปัจจุบัน อนาคต', 'lb');
+  } else if (kind === 'now') {
+    body += `<rect class="m pop" x="248" y="${y - 13}" width="104" height="26" rx="13"/>` + T(300, 52, 'กำลังเกิดขึ้นตอนนี้', 'lb') + T(300, 128, 'am / is / are + V-ing');
+  } else if (kind === 'point') {
+    body += dot(130, 11) + T(130, 56, 'เกิดและจบแล้ว', 'lb') + T(130, 128, 'yesterday · last week · in 2019');
+  } else if (kind === 'span') {
+    body += `<rect class="soft pop" x="70" y="${y - 13}" width="170" height="26" rx="13"/>` + dot(180, 11, 'm2', 250) +
+      T(155, 128, 'was / were + V-ing (ยาว)') + T(180, 56, 'เหตุการณ์สั้นแทรกเข้ามา', 'lb');
+  } else if (kind === 'perfect') {
+    body += `<rect class="soft pop" x="90" y="${y - 9}" width="210" height="18" rx="9"/>` + dot(130, 11, 'm2', 100) + dot(215, 11, 'm2', 200) +
+      `<circle class="m pop" style="animation-delay:300ms" cx="${now}" cy="${y}" r="12"/>` +
+      T(190, 56, 'เกิดในอดีต แต่เชื่อมถึงตอนนี้', 'lb') + T(190, 128, 'have / has + V3');
+  } else if (kind === 'before') {
+    body += dot(80, 13, 'm', 0) + dot(200, 13, 'm2', 250) +
+      `<path class="stroke" d="M96 ${y} H182"/><path class="stroke" d="M174 ${y - 7} L184 ${y} L174 ${y + 7}"/>` +
+      `<text class="num" x="80" y="${y + 5}">1</text><text class="num" x="200" y="${y + 5}">2</text>` +
+      T(80, 128, 'had + V3 (ก่อน)') + T(200, 128, 'Past Simple (หลัง)') + T(140, 56, 'เหตุการณ์ที่เกิดก่อน → หลัง', 'lb');
+  } else if (kind === 'future') {
+    body += `<path class="dash" d="M300 ${y - 12} C 340 20, 470 20, 520 ${y - 12}"/>` + dot(430, 11, 'm', 100) + dot(520, 11, 'm2', 300) +
+      T(430, 128, 'will (ตัดสินใจตอนนี้)') + T(520, 128, 'going to (แผน)') + T(430, 56, 'อนาคต', 'lb');
+  } else if (kind === 'branch') {
+    body += `<rect class="m pop" x="352" y="${y - 12}" width="24" height="24" rx="3" transform="rotate(45 364 ${y})"/>` +
+      `<path class="stroke" d="M388 ${y} H492"/><path class="stroke" d="M484 ${y - 7} L494 ${y} L484 ${y + 7}"/>` + dot(520, 11, 'm2', 300) +
+      T(364, 128, 'if + Present Simple') + T(520, 128, 'will + V1') + T(440, 56, 'ถ้าเงื่อนไขเกิด → ผลลัพธ์', 'lb');
+  }
+  return `<svg class="tl" viewBox="0 0 600 150" role="img" aria-label="ไทม์ไลน์">
+    <rect class="zone-past" x="14" y="26" width="276" height="108" rx="12"/>
+    <rect class="zone-fut" x="310" y="26" width="276" height="108" rx="12"/>
+    <line class="axis" x1="16" y1="${y}" x2="584" y2="${y}"/><path class="axis" d="M574 ${y - 8} L586 ${y} L574 ${y + 8}" fill="none"/>
+    <line class="nowline" x1="${now}" y1="30" x2="${now}" y2="120"/>
+    <text class="zl" x="30" y="20">อดีต · PAST</text><text class="zl" x="${now}" y="20" text-anchor="middle">NOW</text><text class="zl" x="570" y="20" text-anchor="end">อนาคต · FUTURE</text>
+    ${body}</svg>`;
+}
+
+/* ───────── Progress (per-viewer convenience) ───────── */
+const KEY = 'tenseTales.v1';
+let P = { xp: 0, streak: 0, last: '', units: {} };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') P = Object.assign(P, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} };
+const dayStr = (d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+function touchStreak() {
+  const today = dayStr(new Date());
+  if (P.last === today) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  P.streak = P.last === dayStr(y) ? P.streak + 1 : 1;
+  P.last = today;
+}
+function paintStats() {
+  $('#xp').textContent = `${P.xp} XP`;
+  const alive = P.last && (P.last === dayStr(new Date()) || (() => { const y = new Date(); y.setDate(y.getDate() - 1); return P.last === dayStr(y); })());
+  $('#streak').textContent = `${alive ? P.streak : 0} วันติด`;
+}
+const starsFor = (id) => { const b = (P.units[id] || {}).best; return b == null ? 0 : b >= 90 ? 3 : b >= 70 ? 2 : b >= 1 ? 1 : 0; };
+
+/* ───────── Views ───────── */
+const main = $('#main');
+let view = { v: 'home' };
+let showTh = false;
+
+function nav(v, extra = {}) {
+  view = Object.assign({ v }, extra);
+  document.querySelectorAll('.nav button').forEach((b) => {
+    if (b.dataset.v === v || (v === 'unit' && b.dataset.v === 'home')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  window.scrollTo({ top: 0 });
+  ({ home: renderHome, unit: renderUnit, timeline: renderTimeline, challenge: renderChallenge, run: renderRun, result: renderResult })[v]();
+  paintStats();
+}
+
+function renderHome() {
+  const rails = ['present', 'past', 'future'].map((ln) => {
+    const items = UNITS.filter((u) => u.line === ln).map((u) => {
+      const s = starsFor(u.id);
+      return `<button class="station${u.hub ? ' hub' : ''}" data-unit="${u.id}">
+        <span class="code">${u.code}</span><h3>${esc(u.title)}</h3><p>${esc(u.th)} · ${esc(u.tag)}</p>
+        ${u.hub ? '<span class="hubnote">สถานีเปลี่ยนสาย: เชื่อมอดีตเข้ากับปัจจุบัน</span>' : ''}
+        <span class="stars" aria-label="${s} ดาว">${[1, 2, 3].map((i) => `<i class="${i <= s ? 'on' : ''}">★</i>`).join('')}</span></button>`;
+    }).join('');
+    return `<section class="rail ${ln}"><div class="rail-h"><span class="badge">${LINES[ln].badge}</span><b>${LINES[ln].th}</b></div>${items}</section>`;
+  }).join('');
+  main.innerHTML = `<div class="intro"><h1>เข้าใจ tense ด้วยเรื่องสั้น</h1>
+    <p>ระดับ B1 · 8 สถานี อ่านเรื่องสั้น ดูกฎ ดูตำแหน่งบนไทม์ไลน์ แล้วฝึกทำโจทย์ ได้ดาวเมื่อทำถูกตั้งแต่ครั้งแรก</p></div>
+    <div class="map">${rails}</div>`;
+  main.querySelectorAll('[data-unit]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: b.dataset.unit, tab: 'story' })));
+}
+
+function renderUnit() {
+  const u = BYID[view.id], tab = view.tab || 'story';
+  const tabs = [['story', 'เรื่องสั้น'], ['rules', 'กฎและการใช้'], ['time', 'ไทม์ไลน์'], ['practice', 'ฝึกทำโจทย์']];
+  let panel = '';
+  if (tab === 'story') {
+    panel = `<div class="card"><div class="tools"><h2>${esc(u.story.title)}</h2>
+      <span class="sw"><span>แสดงคำแปลไทย</span><button id="thsw" aria-pressed="${showTh}" aria-label="แสดงคำแปลไทย"></button></span></div>
+      <p class="muted" style="margin:0 0 12px">คำที่ไฮไลต์คือ tense ของบทนี้ แตะที่ประโยคเพื่อดูคำแปล</p>
+      <div class="chat ${showTh ? 'show-th' : ''}" id="chat">${u.story.lines.map(([who, en, th]) =>
+        `<div class="msg"><div class="av ${who === 'Mai' ? 'b' : ''}">${who[0]}</div><button class="bubble" aria-label="แสดงคำแปล"><div class="en">${hl(en)}</div><div class="th">${esc(th)}</div></button></div>`).join('')}</div></div>`;
+  } else if (tab === 'rules') {
+    const r = u.rules;
+    panel = `<div class="card"><h2>รูปประโยค</h2><div class="scroll"><table class="form"><tbody>${r.form.map((f) =>
+      `<tr><td class="sign">${esc(f[0])}</td><td>${f[1]}</td><td>${f[2]}</td></tr>`).join('')}</tbody></table></div></div>
+      <div class="card"><h2>ใช้เมื่อไร</h2>${r.uses.map((x) => `<div class="use"><b>${esc(x[0])}</b><div class="ex">${esc(x[1])}</div></div>`).join('')}</div>
+      <div class="card"><h2>คำสัญญาณ</h2><div class="chips">${r.signals.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div></div>
+      ${r.irr ? `<div class="card"><h2>กริยาไม่ปกติที่ควรจำ</h2><div class="irr">${r.irr.map((s) => `<span>${esc(s)}</span>`).join('')}</div></div>` : ''}
+      <div class="card"><h2>ข้อผิดที่เจอบ่อย</h2>${r.mistakes.map((m) => `<div class="mist"><div class="bad">${esc(m[0])}</div><div class="good">${esc(m[1])}</div><div class="muted">${esc(m[2])}</div></div>`).join('')}</div>
+      <div class="tip">💡 ${esc(r.tip)}</div>`;
+  } else if (tab === 'time') {
+    panel = `<div class="card tlbox ${u.line}"><h2>${esc(u.title)} อยู่ตรงไหนของเวลา</h2>${timeline(u.tl)}
+      <p class="muted" style="margin:10px 0 0">เส้นประคือ "ตอนนี้" ฝั่งซ้ายคืออดีต ฝั่งขวาคืออนาคต</p></div>`;
+  } else {
+    const best = (P.units[u.id] || {}).best;
+    panel = `<div class="card"><h2>ฝึกทำโจทย์ ${u.ex.length} ข้อ</h2>
+      <p class="muted">เลือกคำตอบ พิมพ์คำตอบ หรือเรียงคำ ข้อที่ผิดจะวนมาให้ทำซ้ำอีกครั้ง คะแนนนับเฉพาะข้อที่ถูกตั้งแต่ครั้งแรก${best != null ? `<br>คะแนนดีที่สุดของคุณ: <b>${best}%</b>` : ''}</p>
+      <button class="btn" id="go">เริ่มเลย</button></div>`;
+  }
+  main.innerHTML = `<button class="back" id="back">← กลับแผนที่</button>
+    <div class="uhead ${u.line}"><span class="code mono">${u.code} · ${LINES[u.line].badge}</span><h1>${esc(u.title)}</h1><p>${esc(u.th)} · ${esc(u.tag)}</p></div>
+    <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${l}</button>`).join('')}</div>
+    <div class="panel" style="--c: var(--${u.line})">${panel}</div>`;
+  $('#back').addEventListener('click', () => nav('home'));
+  main.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: u.id, tab: b.dataset.tab })));
+  const sw = $('#thsw');
+  if (sw) sw.addEventListener('click', () => { showTh = !showTh; sw.setAttribute('aria-pressed', showTh); $('#chat').classList.toggle('show-th', showTh); });
+  main.querySelectorAll('.bubble').forEach((b) => b.addEventListener('click', () => b.classList.toggle('open')));
+  const go = $('#go');
+  if (go) go.addEventListener('click', () => startRun({ title: u.title, line: u.line, unit: u.id, list: u.ex.map((e) => ({ e, u: u.id })) }));
+}
+
+/* Timeline explorer + which-tense game */
+let gstate = { i: 0, order: shuffle(GUESS.map((_, i) => i)), score: 0, done: 0, picked: null };
+function renderTimeline() {
+  const sel = view.sel || 'ps';
+  const u = BYID[sel];
+  main.innerHTML = `<div class="intro"><h1>ไทม์ไลน์ของ tense</h1><p>เลือก tense เพื่อดูว่ามันอยู่ตรงไหนของเวลา แล้วลองเกมทายด้านล่าง</p></div>
+    <div class="panel">
+    <div class="tchips">${UNITS.map((x) => `<button class="tchip ${x.line}" aria-pressed="${x.id === sel}" data-sel="${x.id}">${esc(x.title)}</button>`).join('')}</div>
+    <div class="card tlbox ${u.line}" style="--c: var(--${u.line})"><h2>${esc(u.title)} <span class="muted" style="font-size:15px;font-weight:500">${esc(u.th)}</span></h2>${timeline(u.tl)}
+      <div class="formula" style="margin-top:10px">${u.rules.form[0][1]}${u.rules.form[0][2] ? ' ' + (u.rules.form[0][2].length < 40 ? '· ' + u.rules.form[0][2] : '') : ''}</div>
+      <p style="margin:10px 0 0" class="ex">${esc(u.rules.uses[0][1])}</p>
+      <div class="row" style="margin-top:12px"><button class="btn ghost" id="openu">เปิดบทเรียน ${u.code}</button></div></div>
+    <div class="card guess" id="guess"></div></div>`;
+  main.querySelectorAll('[data-sel]').forEach((b) => b.addEventListener('click', () => nav('timeline', { sel: b.dataset.sel })));
+  $('#openu').addEventListener('click', () => nav('unit', { id: u.id, tab: 'story' }));
+  renderGuess();
+}
+function renderGuess() {
+  const g = gstate, box = $('#guess');
+  if (g.i >= g.order.length) {
+    box.innerHTML = `<h2>จบเกมทาย</h2><p>ทายถูก <b>${g.score}</b> จาก ${g.order.length} ข้อ</p><button class="btn" id="again">เล่นอีกรอบ</button>`;
+    $('#again').addEventListener('click', () => { gstate = { i: 0, order: shuffle(GUESS.map((_, i) => i)), score: 0, done: 0, picked: null }; renderGuess(); });
+    return;
+  }
+  const [s, ans, why] = GUESS[g.order[g.i]];
+  const au = BYID[ans];
+  box.innerHTML = `<div class="qh">ประโยคนี้ใช้ tense อะไร · ข้อ ${g.i + 1}/${g.order.length}</div><div class="sent" style="margin:8px 0 14px">${esc(s)}</div>
+    <div class="tchips">${UNITS.map((x) => {
+      let st = '';
+      if (g.picked) st = x.id === ans ? 'right' : x.id === g.picked ? 'wrong' : '';
+      return `<button class="tchip ${x.line}" data-g="${x.id}" ${g.picked ? 'disabled' : ''} style="${st === 'right' ? 'background:var(--ok-bg);border-color:var(--ok)' : st === 'wrong' ? 'background:var(--bad-bg);border-color:var(--bad)' : ''}">${esc(x.title)}</button>`;
+    }).join('')}</div>
+    ${g.picked ? `<div class="fb ${g.picked === ans ? 'ok' : 'no'}" style="margin-top:14px" aria-live="polite"><b>${g.picked === ans ? 'ถูกต้อง!' : 'ยังไม่ใช่'}</b>
+      <div class="ans-line">${esc(au.title)}</div><div>${esc(why)}</div></div>
+      <div class="card tlbox ${au.line}" style="margin-top:12px;--c:var(--${au.line})">${timeline(au.tl)}</div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="nx">ข้อต่อไป</button></div>` : ''}`;
+  box.querySelectorAll('[data-g]').forEach((b) => b.addEventListener('click', () => {
+    g.picked = b.dataset.g; if (g.picked === ans) { g.score++; P.xp += 5; touchStreak(); save(); paintStats(); } renderGuess();
+  }));
+  const nx = $('#nx'); if (nx) nx.addEventListener('click', () => { g.i++; g.picked = null; renderGuess(); });
+}
+
+/* Challenge */
+function renderChallenge() {
+  const done = UNITS.filter((u) => starsFor(u.id) > 0).length;
+  main.innerHTML = `<div class="intro"><h1>ชาเลนจ์รวม tense</h1><p>สุ่มโจทย์ 10 ข้อจากทุกสถานี ต้องเลือก tense ให้ถูกเองโดยไม่มีบทเรียนบอกใบ้ เหมาะสำหรับทบทวนหลังเรียนหลายบท</p></div>
+    <div class="card"><p style="margin-top:0">ผ่านมาแล้ว ${done} จาก ${UNITS.length} สถานี</p><div class="row"><button class="btn" id="go">เริ่มชาเลนจ์ 10 ข้อ</button></div></div>`;
+  $('#go').addEventListener('click', () => {
+    const all = UNITS.flatMap((u) => u.ex.map((e) => ({ e, u: u.id })));
+    startRun({ title: 'ชาเลนจ์รวม', line: 'present', unit: null, list: shuffle(all).slice(0, 10) });
+  });
+}
+
+/* Runner */
+let run = null;
+function startRun(cfg) {
+  run = { cfg, queue: cfg.list.slice(), total: cfg.list.length, i: 0, first: 0, miss: {}, seen: new Set(), phase: 'ask', sel: null, built: [], bank: null, retry: new Set() };
+  nav('run');
+}
+function renderRun() {
+  const r = run, item = r.queue[0];
+  if (!item) { finishRun(); return; }
+  const e = item.e;
+  const line = r.cfg.unit ? BYID[r.cfg.unit].line : BYID[item.u].line;
+  if (e.t === 'order' && !r.bank) r.bank = shuffle(e.words.map((w, i) => ({ w, i })));
+  const q = e.t === 'order' ? 'เรียงคำให้เป็นประโยคที่ถูกต้อง' : esc(e.q).replace('___', '<span class="gap">&nbsp;&nbsp;&nbsp;</span>');
+  const fin = r.phase === 'fb';
+  let body = '';
+  if (e.t === 'mc') {
+    body = `<div class="opts">${e.o.map((o, i) => {
+      let c = ''; if (fin) c = i === e.a ? 'right' : i === r.sel ? 'wrong' : '';
+      return `<button class="opt ${c}" data-i="${i}" aria-pressed="${!fin && r.sel === i}" ${fin ? 'disabled' : ''}>${esc(o)}</button>`;
+    }).join('')}</div>`;
+  } else if (e.t === 'fill') {
+    body = `<input class="ans" id="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="พิมพ์คำตอบ" ${fin ? 'disabled' : ''} value="${fin ? esc(r.typed || '') : ''}">`;
+  } else {
+    const used = new Set(r.built);
+    body = `${e.th ? `<p class="muted" style="margin:0">${esc(e.th)}</p>` : ''}<div class="built" id="built">${r.built.map((id) => `<button class="tile" data-rm="${id}" ${fin ? 'disabled' : ''}>${esc(e.words[id])}</button>`).join('')}</div>
+      <div class="bank">${r.bank.map((t) => `<button class="tile ${used.has(t.i) ? 'used' : ''}" data-add="${t.i}" ${fin ? 'disabled' : ''}>${esc(t.w)}</button>`).join('')}</div>`;
+  }
+  let fb = '';
+  if (fin) {
+    const ok = r.lastOk;
+    const ans = e.t === 'mc' ? e.o[e.a] : e.t === 'fill' ? e.a[0] : e.a;
+    fb = `<div class="fb ${ok ? 'ok' : 'no'}" aria-live="polite"><b>${ok ? 'ถูกต้อง!' : 'ยังไม่ถูก'}</b>${ok ? '' : `<div class="ans-line">คำตอบ: ${esc(ans)}</div>`}<div>${esc(e.why)}</div></div>`;
+  }
+  main.innerHTML = `<div class="runner" style="--c: var(--${line})">
+    <div class="row" style="justify-content:space-between"><button class="back" id="quit">← ออก</button><span class="mono muted">${esc(r.cfg.title)}</span></div>
+    <div class="prog" aria-hidden="true">${Array.from({ length: r.total }, (_, k) => `<i class="${k < r.i ? 'done' : k === r.i ? 'cur' : ''}"></i>`).join('')}</div>
+    <div class="qh">${e.t === 'mc' ? 'เลือกคำตอบ' : e.t === 'fill' ? 'เติมคำ' : 'เรียงประโยค'} · ข้อ ${Math.min(r.i + 1, r.total)}/${r.total}</div>
+    <div class="q">${q}</div>${body}${fb}
+    <div class="row"><button class="btn" id="act" ${!fin && !canCheck() ? 'disabled' : ''}>${fin ? 'ต่อไป' : 'ตรวจคำตอบ'}</button></div></div>`;
+  $('#quit').addEventListener('click', () => nav(r.cfg.unit ? 'unit' : 'challenge', r.cfg.unit ? { id: r.cfg.unit, tab: 'practice' } : {}));
+  main.querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => { r.sel = +b.dataset.i; renderRun(); }));
+  main.querySelectorAll('[data-add]').forEach((b) => b.addEventListener('click', () => { r.built.push(+b.dataset.add); renderRun(); }));
+  main.querySelectorAll('[data-rm]').forEach((b) => b.addEventListener('click', () => { r.built.splice(r.built.indexOf(+b.dataset.rm), 1); renderRun(); }));
+  const inp = $('#ans');
+  if (inp) {
+    if (!fin) { inp.focus(); inp.addEventListener('input', () => { r.typed = inp.value; $('#act').disabled = !canCheck(); }); }
+    inp.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); act(); } });
+  }
+  $('#act').addEventListener('click', act);
+  if (fin) $('#act').focus();
+}
+function canCheck() {
+  const r = run, e = r.queue[0].e;
+  if (e.t === 'mc') return r.sel != null;
+  if (e.t === 'fill') return (r.typed || '').trim().length > 0;
+  return r.built.length === e.words.length;
+}
+function act() {
+  const r = run, item = r.queue[0], e = item.e;
+  if (r.phase === 'ask') {
+    if (!canCheck()) return;
+    let ok;
+    if (e.t === 'mc') ok = r.sel === e.a;
+    else if (e.t === 'fill') ok = e.a.some((a) => norm(a) === norm(r.typed));
+    else ok = norm(r.built.map((id) => e.words[id]).join(' ')) === norm(e.a);
+    r.lastOk = ok; r.phase = 'fb';
+    const firstTry = !r.seen.has(item);
+    if (firstTry) { r.seen.add(item); if (ok) { r.first++; P.xp += 10; } else { r.miss[item.u] = (r.miss[item.u] || 0) + 1; } }
+    else if (ok) P.xp += 3;
+    touchStreak(); save(); paintStats();
+    if (!ok && firstTry) r.queue.push(item); // one more try at the end
+    renderRun();
+  } else {
+    r.queue.shift();
+    r.phase = 'ask'; r.sel = null; r.typed = ''; r.built = []; r.bank = null;
+    // progress counts distinct questions finished (correct, or retried once)
+    r.i = r.total - new Set(r.queue).size;
+    renderRun();
+  }
+}
+function finishRun() {
+  const r = run, pct = Math.round((r.first / r.total) * 100);
+  if (r.cfg.unit) { const o = P.units[r.cfg.unit] || {}; o.best = Math.max(o.best || 0, pct); P.units[r.cfg.unit] = o; }
+  P.xp += r.cfg.unit ? 20 : 30; save();
+  r.pct = pct; nav('result');
+}
+function renderResult() {
+  const r = run, pct = r.pct;
+  const weak = Object.entries(r.miss).sort((a, b) => b[1] - a[1]);
+  const msg = pct >= 90 ? 'ยอดเยี่ยมมาก!' : pct >= 70 ? 'ดีมาก เกือบเต็มแล้ว' : pct >= 40 ? 'ใช้ได้ ทบทวนกฎอีกนิดจะดีขึ้น' : 'ไม่เป็นไร ลองอ่านกฎแล้วทำใหม่ได้เลย';
+  main.innerHTML = `<div class="runner"><div class="result card" style="--c:var(--present)">
+    <div class="mono muted">${esc(r.cfg.title)}</div><div class="big">${pct}%</div><div>${msg}</div>
+    <div class="muted">ถูกตั้งแต่ครั้งแรก ${r.first} จาก ${r.total} ข้อ · ได้ XP เพิ่ม</div>
+    ${weak.length ? `<div class="weak"><b>ควรทบทวน</b><div class="chips" style="margin-top:8px">${weak.map(([id, n]) => `<button class="chip" data-open="${id}">${esc(BYID[id].title)} (พลาด ${n})</button>`).join('')}</div></div>` : ''}
+    <div class="row" style="justify-content:center"><button class="btn" id="again">ทำอีกครั้ง</button><button class="btn ghost" id="home2">กลับแผนที่</button></div></div></div>`;
+  main.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: b.dataset.open, tab: 'rules' })));
+  $('#again').addEventListener('click', () => {
+    if (r.cfg.unit) startRun({ title: r.cfg.title, line: r.cfg.line, unit: r.cfg.unit, list: r.cfg.list });
+    else { const all = UNITS.flatMap((u) => u.ex.map((e) => ({ e, u: u.id }))); startRun({ title: 'ชาเลนจ์รวม', line: 'present', unit: null, list: shuffle(all).slice(0, 10) }); }
+  });
+  $('#home2').addEventListener('click', () => nav('home'));
+}
+
+$('#home').addEventListener('click', () => nav('home'));
+document.querySelectorAll('.nav button').forEach((b) => b.addEventListener('click', () => nav(b.dataset.v)));
+nav('home');
+})();
+</script>
+
+</body>
+</html>
