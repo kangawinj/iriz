@@ -1,5 +1,5 @@
 {
-  "id": "/glance-ipad/",
+  "id": "./",
   "name": "Glance for iPad",
   "short_name": "Glance",
   "description": "Private notes locked behind face unlock, with a passcode backup. Everything stays on-device.",

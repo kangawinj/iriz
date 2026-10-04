@@ -5,8 +5,8 @@ notes locked behind your face, with a 6-digit passcode as backup. Inspired by
 [Glance for Mac](https://github.com/jonnyoo/glance). Everything runs on-device — no
 network calls, no accounts.
 
-Open `/glance-ipad/` in Safari on the iPad (HTTPS or localhost is required for the
-camera) → Share → **Add to Home Screen**.
+Host the files over HTTPS (GitHub Pages, Firebase Hosting, Netlify…), open the site in Safari on the iPad (HTTPS or localhost is required for the
+camera), then Share → **Add to Home Screen**.
 
 ## What it does
 
@@ -43,5 +43,5 @@ camera) → Share → **Add to Home Screen**.
 
 ## Develop
 
-Static files only — serve the repo root (`npx http-server .`) and open
-`http://localhost:8080/glance-ipad/`. Firebase Hosting (`public: "."`) already serves it.
+Static files only — serve this folder (`npx http-server .`) and open
+`http://localhost:8080/`.
