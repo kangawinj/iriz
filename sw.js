@@ -1,5 +1,5 @@
-/* Offline cache for Glance for iPad. Bump VERSION when shell files change. */
-const VERSION = 'glance-ipad-v1';
+/* Offline cache for Iriz for iPad. Bump VERSION when shell files change. */
+const VERSION = 'iriz-ipad-v1';
 const SHELL = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest',
   'icons/icon.svg', 'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
@@ -18,7 +18,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((ks) => Promise.all(ks.filter((k) => k.startsWith('glance-ipad-') && k !== VERSION).map((k) => caches.delete(k))))
+      .then((ks) => Promise.all(ks.filter((k) => k.startsWith('iriz-ipad-') && k !== VERSION).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()));
 });
 // Cache-first for the shell and models; network fallback. Same-origin GETs only.

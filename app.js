@@ -1,4 +1,4 @@
-/* Glance for iPad — face-gated private notes (PWA).
+/* Iriz for iPad — face-gated private notes (PWA).
  *
  * Everything runs on-device: face-api.js (vendored) for detection / landmarks /
  * 128-d embeddings, WebCrypto for storage encryption, IndexedDB for persistence.
@@ -17,7 +17,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /* ───────────────────────────── i18n ───────────────────────────── */
 const I18N = {
   en: {
-    welcome: 'Welcome to Glance',
+    welcome: 'Welcome to Iriz',
     welcomeBody: 'Lock your private notes behind your face, with a passcode as backup. Everything stays on this iPad.',
     createPin: 'Create a 6-digit passcode',
     confirmPin: 'Confirm your passcode',
@@ -51,7 +51,7 @@ const I18N = {
     addLook: 'Add another look',
     changePin: 'Change passcode',
     wipe: 'Erase everything',
-    honesty: 'Glance is a convenience lock, not a security upgrade. An iPad camera sees a flat 2D image, so a video of you may fool it, and a web app cannot unlock iPadOS itself. For anything sensitive rely on your passcode and Face ID / Touch ID.',
+    honesty: 'Iriz is a convenience lock, not a security upgrade. An iPad camera sees a flat 2D image, so a video of you may fool it, and a web app cannot unlock iPadOS itself. For anything sensitive rely on your passcode and Face ID / Touch ID.',
     done: 'Done',
     cancel: 'Cancel',
     lookAtCamera: 'Look at the camera',
@@ -87,7 +87,7 @@ const I18N = {
     enterCurrentPin: 'Enter your current passcode',
   },
   th: {
-    welcome: 'ยินดีต้อนรับสู่ Glance',
+    welcome: 'ยินดีต้อนรับสู่ Iriz',
     welcomeBody: 'ล็อกโน้ตส่วนตัวด้วยใบหน้าของคุณ โดยมีรหัสผ่านสำรอง ข้อมูลทั้งหมดอยู่ในไอแพดเครื่องนี้เท่านั้น',
     createPin: 'ตั้งรหัสผ่าน 6 หลัก',
     confirmPin: 'ยืนยันรหัสผ่านอีกครั้ง',
@@ -121,7 +121,7 @@ const I18N = {
     addLook: 'เพิ่มลักษณะใบหน้า',
     changePin: 'เปลี่ยนรหัสผ่าน',
     wipe: 'ลบข้อมูลทั้งหมด',
-    honesty: 'Glance เป็นตัวล็อกเพื่อความสะดวก ไม่ได้เพิ่มความปลอดภัย กล้องไอแพดเห็นภาพแบบ 2 มิติ วิดีโอของคุณอาจหลอกระบบได้ และเว็บแอปปลดล็อก iPadOS เองไม่ได้ ข้อมูลสำคัญให้พึ่งรหัสผ่านและ Face ID / Touch ID',
+    honesty: 'Iriz เป็นตัวล็อกเพื่อความสะดวก ไม่ได้เพิ่มความปลอดภัย กล้องไอแพดเห็นภาพแบบ 2 มิติ วิดีโอของคุณอาจหลอกระบบได้ และเว็บแอปปลดล็อก iPadOS เองไม่ได้ ข้อมูลสำคัญให้พึ่งรหัสผ่านและ Face ID / Touch ID',
     done: 'เสร็จ',
     cancel: 'ยกเลิก',
     lookAtCamera: 'มองที่กล้อง',
@@ -170,7 +170,7 @@ function applyI18n() {
 }
 
 /* ──────────────────────── IndexedDB key/value ──────────────────────── */
-const DB_NAME = 'glance-ipad';
+const DB_NAME = 'iriz-ipad';
 let dbp = null;
 function db() {
   if (!dbp) {

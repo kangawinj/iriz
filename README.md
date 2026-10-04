@@ -1,4 +1,4 @@
-# Glance for iPad
+# Iriz for iPad
 
 A face-unlock **PWA** for iPad (and any modern browser with a front camera): private
 notes locked behind your face, with a 6-digit passcode as backup. Inspired by

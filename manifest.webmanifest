@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Glance for iPad",
-  "short_name": "Glance",
+  "name": "Iriz for iPad",
+  "short_name": "Iriz",
   "description": "Private notes locked behind face unlock, with a passcode backup. Everything stays on-device.",
   "start_url": "./",
   "scope": "./",
