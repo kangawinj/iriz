@@ -1,0 +1,11 @@
+{
+  "id": "./",
+  "name": "Tense Tales Offline · 400 Questions",
+  "short_name": "Tense Tales",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eff4f7",
+  "theme_color": "#10243b",
+  "description": "English Tense practice with 400 exercises. Works offline after first visit."
+}

@@ -2,854 +2,95 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="description" content="แอปเรียน tense และไวยากรณ์อังกฤษระดับ B1 ผ่านเรื่องสั้น ไทม์ไลน์ และแบบฝึกหัด">
-<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-</head>
-<body>
-<script>
-/* Drop any service worker/cache left by the earlier app at this address. */
-try { navigator.serviceWorker && navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); });
-  window.caches && caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }); } catch (e) {}
-</script>
-<title>Tense Tales</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,600..900&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10243b">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Tense Tales Offline — เรียนไวยากรณ์อังกฤษ 8 บท พร้อมแบบฝึกหัด 400 ข้อ ใช้ได้โดยไม่ต้องต่ออินเทอร์เน็ต">
+<title>Tense Tales · Offline 400</title>
 <style>
-/* Layout concept: a transit map of time. Three lines (Present, Past, Future); each tense is a station. */
-:root {
-  --bg: #f2f5f7;
-  --surface: #ffffff;
-  --ink: #101b2d;
-  --muted: #56667c;
-  --line: #d3dce6;
-  --present: #0e8f9c;
-  --past: #d1710f;
-  --future: #6a4fd8;
-  --ok: #17895a;
-  --bad: #cc3f37;
-  --ok-bg: #e3f5ec;
-  --bad-bg: #fbe8e6;
-  --mark: #fff0b8;
-  --on-line: #ffffff;
-  --f-display: "Archivo", "IBM Plex Sans Thai", system-ui, sans-serif;
-  --f-body: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0b111b; --surface: #131b29; --ink: #e8eef6; --muted: #93a3b8; --line: #263246;
-    --present: #3cc6d4; --past: #f0a04b; --future: #a592ff;
-    --ok: #46d39a; --bad: #ff7a70; --ok-bg: #12301f; --bad-bg: #351b1b; --mark: #4a3f10; --on-line: #0b111b;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0b111b; --surface: #131b29; --ink: #e8eef6; --muted: #93a3b8; --line: #263246;
-  --present: #3cc6d4; --past: #f0a04b; --future: #a592ff;
-  --ok: #46d39a; --bad: #ff7a70; --ok-bg: #12301f; --bad-bg: #351b1b; --mark: #4a3f10; --on-line: #0b111b;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body); padding-inline: 16px; padding-block: 0 48px; }
-.wrap { max-width: 980px; margin-inline: auto; }
-button { font: inherit; color: inherit; cursor: pointer; }
-button:focus-visible, input:focus-visible { outline: 3px solid var(--future); outline-offset: 2px; }
-h1, h2, h3 { font-family: var(--f-display); font-stretch: 100%; line-height: 1.15; margin: 0; text-wrap: balance; }
-.mono { font-family: var(--f-mono); font-weight: 500; letter-spacing: .04em; }
-.muted { color: var(--muted); }
-
-/* Header */
-.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
-  padding-block: 12px 10px; border-bottom: 1px solid var(--line); margin-inline: -16px; padding-inline: 16px; }
-.top-in { max-width: 980px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
-.brand { font-family: var(--f-display); font-weight: 900; font-stretch: 118%; font-size: 22px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; }
-.brand svg { width: 30px; height: 30px; }
-.nav { display: flex; gap: 4px; margin-inline-start: auto; flex-wrap: wrap; }
-.nav button { background: none; border: 0; padding: 8px 12px; border-radius: 8px; font-weight: 600; color: var(--muted); }
-.nav button[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -3px 0 var(--ink); border-radius: 0; }
-.stats { display: flex; gap: 8px; }
-.pill { font-family: var(--f-mono); font-weight: 500; font-size: 13px; border: 1px solid var(--line); background: var(--surface); padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
-
-main { padding-block: 24px 0; }
-
-/* Home: metro map */
-.intro { display: grid; gap: 6px; margin-bottom: 24px; }
-.intro h1 { font-size: clamp(28px, 6vw, 44px); font-weight: 900; font-stretch: 112%; }
-.intro p { margin: 0; max-width: 60ch; color: var(--muted); }
-.map { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 28px 24px; align-items: start; }
-.rail { --c: var(--present); position: relative; display: grid; gap: 14px; padding-inline-start: 34px; }
-.rail.past { --c: var(--past); } .rail.future { --c: var(--future); }
-.rail::before { content: ""; position: absolute; inset-inline-start: 11px; top: 38px; bottom: 26px; width: 8px; border-radius: 4px; background: var(--c); }
-.rail-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.rail-h .badge { background: var(--c); color: var(--on-line); font-family: var(--f-mono); font-size: 12px; padding: 3px 10px; border-radius: 6px; letter-spacing: .08em; }
-.rail-h b { font-family: var(--f-display); font-weight: 800; font-size: 18px; }
-.station { position: relative; display: block; width: 100%; text-align: start; background: var(--surface); border: 1px solid var(--line);
-  border-radius: 12px; padding: 14px 16px; }
-.station::before { content: ""; position: absolute; inset-inline-start: -32px; top: 18px; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--bg); border: 5px solid var(--c); }
-.station.hub::after { content: ""; position: absolute; inset-inline-start: -37px; top: 13px; width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--present); }
-.station:hover { border-color: var(--c); }
-.station .code { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
-.station h3 { font-size: 20px; font-weight: 800; margin-top: 2px; }
-.station p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
-.stars { letter-spacing: 2px; font-size: 15px; color: var(--c); margin-top: 6px; display: block; }
-.stars i { font-style: normal; opacity: .25; } .stars i.on { opacity: 1; }
-.hubnote { font-size: 12px; color: var(--present); font-weight: 600; margin-top: 4px; display: block; }
-
-/* Unit page */
-.back { background: none; border: 0; color: var(--muted); padding: 4px 0; font-weight: 500; }
-.uhead { --c: var(--present); display: grid; gap: 4px; padding-block: 8px 18px; }
-.uhead.past { --c: var(--past); } .uhead.future { --c: var(--future); }
-.uhead .code { color: var(--c); }
-.uhead h1 { font-size: clamp(30px, 6vw, 46px); font-weight: 900; font-stretch: 112%; }
-.uhead p { margin: 0; color: var(--muted); }
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-.tabs button { border: 1px solid var(--line); background: var(--surface); padding: 8px 16px; border-radius: 99px; font-weight: 600; }
-.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.panel { display: grid; gap: 18px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-width: 0; }
-.card h2 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
-
-/* Story */
-.tools { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-.chat { display: grid; gap: 12px; }
-.msg { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 10px; align-items: start; }
-.av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; background: var(--ink); color: var(--bg); }
-.av.b { background: var(--c); color: var(--on-line); }
-.bubble { background: var(--bg); border: 1px solid var(--line); border-radius: 4px 14px 14px 14px; padding: 10px 14px; text-align: start; width: 100%; }
-.bubble .en { font-size: 18px; }
-.bubble .th { display: none; color: var(--muted); font-size: 15px; margin-top: 4px; }
-.show-th .bubble .th, .bubble.open .th { display: block; }
-mark { background: var(--mark); color: inherit; border-radius: 4px; padding: 0 3px; font-weight: 600; }
-.sw { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-.sw button { width: 44px; height: 26px; border-radius: 99px; border: 1px solid var(--line); background: var(--bg); position: relative; padding: 0; }
-.sw button::after { content: ""; position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: transform .15s; }
-.sw button[aria-pressed="true"] { background: var(--ink); }
-.sw button[aria-pressed="true"]::after { background: var(--bg); transform: translateX(18px); }
-
-/* Rules */
-table.form { width: 100%; border-collapse: collapse; }
-.scroll { overflow-x: auto; }
-table.form th, table.form td { text-align: start; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-table.form th { font-family: var(--f-mono); font-weight: 500; font-size: 13px; color: var(--muted); }
-table.form td.sign { font-family: var(--f-mono); font-size: 15px; white-space: nowrap; width: 1%; }
-.use { display: grid; gap: 4px; padding-block: 12px; border-bottom: 1px solid var(--line); }
-.use:last-child { border-bottom: 0; padding-bottom: 0; }
-.use b { font-weight: 600; }
-.ex { font-size: 17px; border-inline-start: 4px solid var(--c); padding-inline-start: 12px; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { border: 1px solid var(--line); border-radius: 99px; padding: 3px 12px; font-size: 14px; background: var(--bg); }
-.mist { display: grid; gap: 4px; padding-block: 10px; border-bottom: 1px solid var(--line); }
-.mist:last-child { border-bottom: 0; }
-.bad { color: var(--bad); } .good { color: var(--ok); }
-.bad::before { content: "✗ "; } .good::before { content: "✓ "; }
-.tip { background: var(--mark); border-radius: 10px; padding: 10px 14px; }
-.irr { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 14px; font-family: var(--f-mono); font-size: 14px; }
-
-/* Timeline */
-.tl { width: 100%; height: auto; display: block; }
-.tl .zone-past { fill: color-mix(in srgb, var(--past) 12%, transparent); }
-.tl .zone-fut { fill: color-mix(in srgb, var(--future) 12%, transparent); }
-.tl .axis { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
-.tl .nowline { stroke: var(--present); stroke-width: 3; stroke-dasharray: 5 5; }
-.tl text { font-family: var(--f-body); fill: var(--muted); font-size: 13px; }
-.tl text.zl { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; }
-.tl text.lb { fill: var(--ink); font-weight: 600; font-size: 14px; }
-.tl text.num { fill: var(--on-line); font-weight: 800; font-size: 13px; text-anchor: middle; }
-.tl .m { fill: var(--c); }
-.tl .m2 { fill: var(--c2); }
-.tl .soft { fill: var(--c); opacity: .3; }
-.tl .stroke { stroke: var(--c); fill: none; stroke-width: 3; stroke-linecap: round; }
-.tl .dash { stroke: var(--c); fill: none; stroke-width: 3; stroke-dasharray: 6 6; stroke-linecap: round; }
-.tl .pop { transform-box: fill-box; transform-origin: center; animation: pop .5s both; }
-.tl .soft.pop { animation-name: pop-soft; }
-@keyframes pop { from { transform: scale(.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes pop-soft { from { transform: scaleX(.2); opacity: 0; } to { transform: scaleX(1); opacity: .3; } }
-.tlbox { --c: var(--present); --c2: var(--ink); }
-.tlbox.past { --c: var(--past); } .tlbox.future { --c: var(--future); }
-.formula { font-family: var(--f-mono); font-size: 15px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
-
-/* Buttons */
-.btn { border: 0; background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 10px; font-weight: 600; min-height: 46px; }
-.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-.btn[disabled] { opacity: .35; cursor: default; }
-.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-/* Runner */
-.runner { max-width: 680px; margin-inline: auto; display: grid; gap: 16px; }
-.prog { display: flex; gap: 4px; }
-.prog i { flex: 1; height: 8px; border-radius: 4px; background: var(--line); }
-.prog i.done { background: var(--c, var(--present)); }
-.prog i.cur { background: var(--ink); }
-.q { font-size: clamp(20px, 4.5vw, 26px); font-weight: 500; line-height: 1.4; }
-.q .gap { display: inline-block; min-width: 3.2em; border-bottom: 3px solid var(--ink); text-align: center; color: var(--c, var(--present)); font-weight: 700; }
-.qh { font-family: var(--f-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-.opts { display: grid; gap: 10px; }
-.opt { text-align: start; background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 18px; min-height: 52px; }
-.opt:hover { border-color: var(--ink); }
-.opt[aria-pressed="true"] { border-color: var(--ink); background: var(--bg); box-shadow: inset 4px 0 0 var(--ink); }
-.opt.right { border-color: var(--ok); background: var(--ok-bg); }
-.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
-input.ans { width: 100%; font: inherit; font-size: 20px; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); }
-.built { min-height: 58px; border-bottom: 3px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; padding-block: 6px; }
-.bank { display: flex; flex-wrap: wrap; gap: 8px; }
-.tile { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 8px 14px; font-size: 18px; min-height: 44px; }
-.tile.used { opacity: .25; pointer-events: none; }
-.fb { border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; }
-.fb.ok { background: var(--ok-bg); border: 1px solid var(--ok); }
-.fb.no { background: var(--bad-bg); border: 1px solid var(--bad); }
-.fb b { font-family: var(--f-display); font-size: 18px; }
-.fb .ans-line { font-size: 17px; font-weight: 600; }
-.result { text-align: center; display: grid; gap: 14px; justify-items: center; padding-block: 24px; }
-.result .big { font-family: var(--f-display); font-weight: 900; font-stretch: 118%; font-size: 64px; line-height: 1; }
-.weak { text-align: start; width: 100%; }
-
-/* Timeline explorer + guess game */
-.tchips { display: flex; gap: 8px; flex-wrap: wrap; }
-.tchip { --c: var(--present); border: 2px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 14px; font-weight: 600; }
-.tchip.past { --c: var(--past); } .tchip.future { --c: var(--future); }
-.tchip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 -4px 0 var(--c); }
-.grid2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-.guess .sent { font-size: clamp(20px, 4vw, 26px); font-weight: 500; }
-
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+:root{--bg:#eef3f6;--paper:#fff;--ink:#10243b;--muted:#546779;--line:#d3dfe7;--present:#087b8a;--past:#c46b12;--future:#6650ca;--good:#178553;--bad:#ba3b35;--goodbg:#e4f6ec;--badbg:#fff0ed;--radius:14px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;padding-bottom:80px}
+button,input{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible{outline:3px solid var(--future);outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.55}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(27px,5vw,43px);letter-spacing:-.025em;line-height:1.18}h2{font-size:21px;line-height:1.3}h3{font-size:18px}p{margin-bottom:12px}strong{font-weight:750}
+button:hover:not(:disabled){filter:brightness(.97)}.container{max-width:1050px;margin:0 auto;padding:0 19px}.top{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;z-index:40;top:0}.navrow{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;min-height:74px;padding:12px 19px}.brand{border:0;background:transparent;display:flex;align-items:center;gap:12px;font-size:23px;font-weight:850;letter-spacing:-.025em;padding:0}.mark{width:34px;height:34px;border-radius:9px;background:var(--ink);padding:7px;display:grid;gap:3px;align-content:center}.mark i{height:4px;border-radius:5px;background:var(--present)}.mark i:nth-child(2){background:var(--past)}.mark i:nth-child(3){background:var(--future)}.navlinks{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.navlinks button{background:transparent;border:0;border-radius:8px;padding:9px 12px;font-weight:700;color:var(--muted);white-space:nowrap}.navlinks button.active{background:var(--ink);color:white}.stats{display:flex;gap:7px;align-items:center}.stat{font-size:12px;font-weight:750;background:var(--bg);border:1px solid var(--line);border-radius:50px;padding:5px 10px;white-space:nowrap}
+main{padding:29px 0 0}.hero{display:grid;gap:6px;margin-bottom:26px}.hero p{color:var(--muted);max-width:65ch;margin:0}.eyebrow{font-weight:780;letter-spacing:.11em;font-size:11px;color:var(--present);text-transform:uppercase}.notice{font-size:13px;color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:13px;font-weight:650;background:var(--bg)}.intro-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.metro{display:grid;grid-template-columns:repeat(auto-fit,minmax(282px,1fr));gap:23px}.rail{--color:var(--present);padding-left:34px;position:relative;display:grid;gap:12px;align-content:start}.rail.past{--color:var(--past)}.rail.future{--color:var(--future)}.rail:before{content:"";position:absolute;left:10px;top:37px;bottom:28px;width:7px;border-radius:9px;background:var(--color)}.rail-title{font-size:13px;font-weight:850;letter-spacing:.06em;color:var(--color);margin-bottom:5px}.station{border:1px solid var(--line);border-radius:var(--radius);padding:18px;text-align:left;background:var(--paper);position:relative;box-shadow:0 2px 9px #19354a09}.station:before{content:"";position:absolute;left:-31px;top:21px;width:21px;height:21px;border:5px solid var(--color);background:var(--bg);border-radius:50%}.station:hover{border-color:var(--color);box-shadow:0 8px 19px #19354a12;transform:translateY(-1px)}.station small{color:var(--color);font-weight:850;letter-spacing:.04em}.station h3{margin:3px 0}.station p{color:var(--muted);font-size:13px;margin:0}.station-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px}.stars{letter-spacing:3px;font-size:16px;color:var(--color)}.stars .empty{opacity:.2}
+.back{padding:5px 0;color:var(--muted);background:transparent;border:0;font-weight:700;margin-bottom:15px}.heading{--accent:var(--present);margin-bottom:20px}.heading.past{--accent:var(--past)}.heading.future{--accent:var(--future)}.heading .eyebrow{color:var(--accent)}.heading p{color:var(--muted);margin:0}.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0}.tab{background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:9px 15px;font-weight:720}.tab.active{background:var(--ink);color:white;border-color:var(--ink)}.panels{display:grid;gap:16px}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px}.card h2{margin-bottom:12px}.ruleline{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;padding:15px;background:#f0f5fa;border-radius:10px;overflow-wrap:anywhere}.rule-bullets{padding-left:22px;margin:10px 0}.rule-bullets li{padding-bottom:6px}.tags{display:flex;flex-wrap:wrap;gap:7px}.tag{border:1px solid var(--line);border-radius:99px;background:var(--bg);font-size:13px;padding:3px 11px}.line-example{border-left:4px solid var(--present);padding:7px 0 7px 13px}.incorrect{color:var(--bad);font-weight:700}.chat{display:grid;gap:11px}.message{display:flex;gap:11px;align-items:flex-start}.avatar{width:37px;height:37px;background:var(--ink);color:white;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-weight:800}.avatar.mai{background:var(--present)}.bubble{background:var(--bg);padding:12px 15px;border-radius:5px 13px 13px 13px;flex:1}.bubble small{font-weight:800;color:var(--muted)}.translation{color:var(--muted);font-size:14px;margin-top:3px}.timeline{position:relative;padding:18px 6px 27px;margin:8px 0;min-height:130px;display:grid;align-items:center}.timeline-bg{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden}.timeline-bg i:first-child{background:#fff0e0}.timeline-bg i:last-child{background:#f0ecff}.axis{height:4px;background:#7c8a9d;position:relative;z-index:1;border-radius:4px}.axis:before{content:"";position:absolute;left:50%;top:-52px;height:108px;border-left:3px dashed var(--present)}.axis:after{content:"➜";position:absolute;right:0;top:-18px;font-size:20px;color:#697a8f}.time-marks{display:flex;justify-content:space-between;position:absolute;inset:5px 15px auto;color:var(--muted);font-size:11px;font-weight:700}.moment{position:absolute;z-index:2;left:var(--time-pos,35%);top:50%;width:18px;height:18px;transform:translate(-50%,-43%);background:var(--moment-color,var(--past));border:3px solid white;box-shadow:0 0 0 3px var(--moment-color,var(--past));border-radius:50%}.moment.future{--moment-color:var(--future)}.moment.present{--moment-color:var(--present)}.time-caption{position:absolute;z-index:3;bottom:8px;left:15px;right:15px;text-align:center;color:var(--muted);font-size:13px}
+.btn{border:0;padding:12px 20px;border-radius:10px;font-weight:800;color:white;background:var(--ink);min-height:46px}.btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn.choice{background:var(--paper);color:var(--ink);border:2px solid var(--line);width:100%;text-align:left;font-size:17px;min-height:55px}.btn.choice.selected{border-color:var(--ink);box-shadow:inset 5px 0 0 var(--ink);background:var(--bg)}.btn.choice.correct{border-color:var(--good);background:var(--goodbg)}.btn.choice.incorrect{border-color:var(--bad);background:var(--badbg)}.btn.word{background:var(--paper);border:2px solid var(--line);color:var(--ink);min-height:44px;padding:8px 13px}.btn.word.used{opacity:.28;pointer-events:none}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.result-row{justify-content:center}.small{font-size:13px}.muted{color:var(--muted)}.exercise-intro{display:grid;gap:8px}.best{font-size:17px;font-weight:700}.quiz{max-width:720px;margin:auto;display:grid;gap:17px}.quiz-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}.quiz-top .back{margin:0}.quiz-progress{height:9px;background:var(--line);border-radius:20px;overflow:hidden}.quiz-progress div{height:100%;width:0;background:var(--present);transition:width .18s}.question-kind{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:750}.question-text{font-size:clamp(20px,4.2vw,28px);font-weight:650;line-height:1.42;overflow-wrap:anywhere}.question-text .gap{display:inline-block;border-bottom:3px solid var(--ink);min-width:60px;height:1em;vertical-align:baseline}.options{display:grid;gap:10px}.answerbox{font-size:19px;line-height:1.5;border:2px solid var(--line);padding:12px 15px;background:var(--paper);width:100%;border-radius:10px;color:var(--ink)}.word-zone{border-bottom:3px solid var(--line);padding:10px 5px;min-height:64px;display:flex;flex-wrap:wrap;gap:8px}.word-bank{display:flex;flex-wrap:wrap;gap:8px}.feedback{padding:15px 18px;border:1px solid;border-radius:12px;background:var(--goodbg);border-color:var(--good)}.feedback.no{background:var(--badbg);border-color:var(--bad)}.feedback strong{display:block;font-size:18px}.feedback p{margin:4px 0}.score-box{text-align:center}.bigscore{font-size:clamp(60px,12vw,93px);line-height:1.1;font-weight:900;letter-spacing:-.05em}.choices{display:flex;flex-wrap:wrap;gap:9px}.bottom-help{font-size:13px;color:var(--muted);margin-top:28px;border-top:1px solid var(--line);padding-top:18px}
+@media(max-width:750px){.navrow{gap:8px;min-height:unset}.brand{font-size:20px}.navlinks{width:100%;justify-content:space-between}.navlinks button{flex:1;padding:8px 6px;font-size:13px}.container{padding:0 15px}main{padding-top:20px}.card{padding:17px}.metro{grid-template-columns:1fr}.stat{font-size:11px}}
 </style>
-
-<div class="top"><div class="top-in">
-  <button class="brand" id="home" aria-label="หน้าแรก">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--ink)"/><path d="M6 11h20" stroke="var(--present)" stroke-width="3" stroke-linecap="round"/><path d="M6 16h20" stroke="var(--past)" stroke-width="3" stroke-linecap="round"/><path d="M6 21h20" stroke="var(--future)" stroke-width="3" stroke-linecap="round"/></svg>
-    Tense Tales
-  </button>
-  <div class="stats"><span class="pill" id="xp"></span><span class="pill" id="streak"></span></div>
-  <nav class="nav" aria-label="เมนูหลัก">
-    <button data-v="home">แผนที่บทเรียน</button>
-    <button data-v="timeline">ไทม์ไลน์</button>
-    <button data-v="challenge">ชาเลนจ์</button>
-  </nav>
-</div></div>
-
-<div class="wrap"><main id="main"></main></div>
-
+<link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"></head>
+<body>
+<header class="top"><div class="container navrow"><button class="brand" data-view="home" aria-label="หน้าแรก"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Tense Tales</span></button><div class="stats"><span id="xp" class="stat">0 XP</span><span id="streak" class="stat">0 วันติด</span></div><nav class="navlinks"><button data-view="home" id="navhome" class="active">แผนที่บทเรียน</button><button data-view="timeline" id="navtimeline">ไทม์ไลน์</button><button data-view="challenge" id="navchallenge">ชาเลนจ์</button></nav></div></header>
+<div class="container"><main id="app"></main><footer class="bottom-help">Tense Tales · Offline Edition · 8 บท × 50 ข้อ = 400 ข้อ · คะแนนบันทึกไว้ในเบราว์เซอร์ของอุปกรณ์นี้เมื่อระบบรองรับ · ไม่ต้องเชื่อมต่ออินเทอร์เน็ต</footer></div>
 <script>
-(() => {
-'use strict';
-const $ = (s, r = document) => r.querySelector(s);
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const hl = (s) => esc(s).replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>');
-const norm = (s) => s.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim().replace(/[.!?]$/, '');
-const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-
-/* ───────── Exercise helpers ───────── */
-const mc = (q, o, a, why) => ({ t: 'mc', q, o, a, why });
-const fill = (q, a, why, tip) => ({ t: 'fill', q, a, why, tip });
-const order = (words, th, why) => ({ t: 'order', words, a: words.join(' '), th, why });
-
-/* ───────── Course content ───────── */
-const LINES = {
-  present: { badge: 'PRESENT LINE', th: 'สายปัจจุบัน' },
-  past: { badge: 'PAST LINE', th: 'สายอดีต' },
-  future: { badge: 'FUTURE LINE', th: 'สายอนาคต' },
-};
-
-const UNITS = [
-{
-  id: 'ps', code: 'P1', line: 'present', title: 'Present Simple', th: 'ปัจจุบันธรรมดา', tag: 'กิจวัตร ความจริง ตารางเวลา', tl: 'habit',
-  story: { title: 'Mai ทำงานที่คาเฟ่', lines: [
-    ['Mai', 'I [[work]] at a small café near the station.', 'ฉันทำงานที่คาเฟ่เล็กๆ ใกล้สถานี'],
-    ['Mai', 'It [[opens]] at six, so I [[get up]] at five every day.', 'คาเฟ่เปิดหกโมง ฉันเลยตื่นตีห้าทุกวัน'],
-    ['Tom', '[[Does]] your boss [[like]] early birds?', 'เจ้านายคุณชอบคนตื่นเช้าไหม'],
-    ['Mai', 'He [[doesn\'t care]]. He just [[wants]] fresh coffee at six!', 'เขาไม่สนหรอก เขาแค่อยากได้กาแฟสดตอนหกโมง'],
-    ['Tom', 'Fair enough. The sun [[rises]] early in summer anyway.', 'ก็ยุติธรรมดี หน้าร้อนดวงอาทิตย์ก็ขึ้นเช้าอยู่แล้ว'],
-  ] },
-  rules: {
-    form: [['+', 'I / you / we / they work', 'he / she / it work<b>s</b>'], ['−', 'I / you / we / they <b>don\'t</b> work', 'he / she / it <b>doesn\'t</b> work'], ['?', '<b>Do</b> I / you / we / they work?', '<b>Does</b> he / she / it work?']],
-    uses: [
-      ['กิจวัตรและนิสัย', 'I get up at five every day.'],
-      ['ความจริงที่เป็นอยู่เสมอ', 'The sun rises in the east.'],
-      ['ตารางเวลาที่แน่นอน (รถ หนัง คลาส)', 'The train leaves at 8:15.'],
-    ],
-    signals: ['always', 'usually', 'often', 'sometimes', 'never', 'every day', 'on Mondays', 'once a week'],
-    mistakes: [
-      ['She work here.', 'She works here.', 'he / she / it ต้องเติม -s หรือ -es ท้ายกริยา'],
-      ['Does she works here?', 'Does she work here?', 'มี does ช่วยแล้ว กริยากลับไปเป็นรูปเดิม'],
-      ['He don\'t like fish.', 'He doesn\'t like fish.', 'he / she / it ใช้ doesn\'t ไม่ใช่ don\'t'],
-    ],
-    tip: 'เติม -es หลัง s, sh, ch, x, o (goes, watches) และ พยัญชนะ+y เปลี่ยนเป็น -ies (study → studies)',
-  },
-  ex: [
-    mc('My sister ___ in a bank.', ['work', 'works', 'is work'], 1, 'she เป็นบุรุษที่สาม เอกพจน์ กริยาต้องเติม -s'),
-    mc('___ you often play football?', ['Do', 'Does', 'Are'], 0, 'you ใช้ Do ในประโยคคำถาม Present Simple'),
-    fill('He ___ TV every evening. (watch)', ['watches'], 'ลงท้ายด้วย ch เติม -es: watch → watches'),
-    fill('She ___ spicy food. (not like)', ['doesn\'t like', 'does not like'], 'ปฏิเสธ he / she / it ใช้ doesn\'t + กริยาช่อง 1 (ไม่เติม -s)'),
-    order(['Does', 'your', 'brother', 'speak', 'English?'], 'พี่ชายหรือน้องชายของคุณพูดภาษาอังกฤษไหม', 'Does + ประธาน + กริยาช่อง 1'),
-    mc('Water ___ at 100 degrees.', ['boils', 'is boiling', 'boil'], 0, 'ความจริงทางวิทยาศาสตร์ ใช้ Present Simple'),
-    mc('The film ___ at 7:30 tonight.', ['starts', 'start', 'starting'], 0, 'ตารางเวลาที่แน่นอนใช้ Present Simple'),
-  ],
-},
-{
-  id: 'pc', code: 'P2', line: 'present', title: 'Present Continuous', th: 'ปัจจุบันกำลังดำเนินอยู่', tag: 'ตอนนี้ ช่วงนี้ นัดหมายที่ตกลงแล้ว', tl: 'now',
-  story: { title: 'Tom โทรหา Mai', lines: [
-    ['Tom', 'Hi Mai! What are you [[doing]] right now?', 'หวัดดีไหม ตอนนี้ทำอะไรอยู่'],
-    ['Mai', 'I\'m [[making]] a latte. It\'s very busy today!', 'กำลังทำลาเต้อยู่ วันนี้ยุ่งมาก'],
-    ['Tom', 'Are you [[working]] all day?', 'ทำงานทั้งวันเลยเหรอ'],
-    ['Mai', 'No, I\'m [[finishing]] at two. Then I\'m [[meeting]] Anna for lunch.', 'เปล่า เลิกบ่ายสอง แล้วนัดเจอแอนนาทานข้าวกลางวัน'],
-    ['Tom', 'Nice. By the way, I\'m [[standing]] outside your café!', 'ดีเลย ว่าแต่ตอนนี้ผมยืนอยู่หน้าคาเฟ่คุณนะ'],
-  ] },
-  rules: {
-    form: [['+', 'I <b>am</b> working', 'he / she / it <b>is</b> working · we / you / they <b>are</b> working'], ['−', 'I\'m <b>not</b> working', 'he <b>isn\'t</b> working · they <b>aren\'t</b> working'], ['?', '<b>Am</b> I working?', '<b>Is</b> he working? · <b>Are</b> they working?']],
-    uses: [
-      ['กำลังทำอยู่ตอนนี้', 'She is talking on the phone now.'],
-      ['ช่วงนี้ หรือชั่วคราว', 'I\'m reading a great book these days.'],
-      ['นัดหมายในอนาคตที่ตกลงไว้แล้ว', 'We\'re flying to Phuket on Friday.'],
-    ],
-    signals: ['now', 'right now', 'at the moment', 'today', 'these days', 'Look!', 'Listen!'],
-    mistakes: [
-      ['I am knowing the answer.', 'I know the answer.', 'กริยาแสดงสภาวะ (know, like, want, need, understand) ไม่ใช้ -ing'],
-      ['She working now.', 'She is working now.', 'ต้องมี am / is / are นำหน้ากริยา -ing'],
-      ['Are you wanting tea?', 'Do you want tea?', 'want เป็นกริยาแสดงสภาวะ ใช้ Present Simple'],
-    ],
-    tip: 'การสะกด: write → writing (ตัด e), run → running (ซ้ำพยัญชนะ), lie → lying',
-  },
-  ex: [
-    mc('Be quiet! The baby ___.', ['sleeps', 'is sleeping', 'sleep'], 1, 'Be quiet! บอกว่าตอนนี้กำลังหลับอยู่ ใช้ Present Continuous'),
-    mc('Look! It ___ outside.', ['rains', 'is raining', 'rain'], 1, 'Look! ชี้ให้ดูสิ่งที่เกิดขึ้นตอนนี้'),
-    fill('They ___ football at the moment. (play)', ['are playing', '\'re playing'], 'at the moment + are + กริยา -ing'),
-    fill('I ___ today. It\'s a holiday. (not work)', ['am not working', '\'m not working'], 'ปฏิเสธ: I am not + กริยา -ing'),
-    order(['What', 'are', 'you', 'doing', 'right', 'now?'], 'ตอนนี้คุณกำลังทำอะไรอยู่', 'Wh- + are + you + กริยา -ing'),
-    mc('We ___ to the cinema tonight. I\'ve already bought the tickets.', ['are going', 'go', 'goes'], 0, 'นัดหมายที่ตกลงแล้ว ใช้ Present Continuous พูดถึงอนาคต'),
-    mc('Which sentence is correct?', ['I am wanting a coffee.', 'I want a coffee.', 'I\'m want a coffee.'], 1, 'want เป็นกริยาแสดงสภาวะ ไม่ใช้ -ing'),
-  ],
-},
-{
-  id: 'pa', code: 'A1', line: 'past', title: 'Past Simple', th: 'อดีตธรรมดา', tag: 'เรื่องที่จบแล้วในอดีต', tl: 'point',
-  story: { title: 'สุดสัปดาห์ที่แล้ว', lines: [
-    ['Tom', 'How was your weekend?', 'สุดสัปดาห์เป็นยังไงบ้าง'],
-    ['Mai', 'Great! On Saturday I [[went]] to the beach with Anna.', 'สุดยอด! วันเสาร์ฉันไปชายหาดกับแอนนา'],
-    ['Tom', '[[Did]] you [[swim]]?', 'ได้ว่ายน้ำไหม'],
-    ['Mai', 'No, the water [[was]] too cold. We [[walked]] along the sand and [[ate]] ice cream instead.', 'ไม่ น้ำเย็นเกินไป เราเดินเลียบหาดทรายแล้วกินไอศกรีมแทน'],
-    ['Tom', 'I [[stayed]] home and [[watched]] three films. I [[didn\'t]] even [[go]] outside!', 'ผมอยู่บ้านดูหนังสามเรื่อง ไม่ได้ออกนอกบ้านเลยด้วยซ้ำ'],
-  ] },
-  rules: {
-    form: [['+', 'I / he / we / they work<b>ed</b> (ปกติ) · <b>went</b> (ไม่ปกติ)', 'กริยาช่อง 2 ใช้เหมือนกันทุกประธาน'], ['−', 'I / he / we / they <b>didn\'t</b> work', 'didn\'t + กริยาช่อง 1'], ['?', '<b>Did</b> you work?', 'Did + ประธาน + กริยาช่อง 1']],
-    uses: [
-      ['เหตุการณ์ที่จบแล้ว มักบอกเวลาในอดีต', 'I visited Chiang Mai last year.'],
-      ['เหตุการณ์ต่อเนื่องตามลำดับ', 'She opened the door, saw a cat and smiled.'],
-      ['นิสัยหรือสถานการณ์ในอดีตที่ไม่เป็นแล้ว', 'When I was a child, I played outside every day.'],
-    ],
-    signals: ['yesterday', 'last week', 'in 2019', 'two days ago', 'when I was ten', 'then'],
-    irr: ['go – went', 'see – saw', 'eat – ate', 'buy – bought', 'have – had', 'make – made', 'take – took', 'come – came', 'get – got', 'write – wrote', 'meet – met', 'say – said'],
-    mistakes: [
-      ['Did you went there?', 'Did you go there?', 'มี did แล้ว กริยากลับเป็นช่อง 1'],
-      ['I didn\'t saw him.', 'I didn\'t see him.', 'didn\'t + กริยาช่อง 1 เสมอ'],
-      ['She buyed a bag.', 'She bought a bag.', 'buy เป็นกริยาไม่ปกติ ต้องจำช่อง 2'],
-    ],
-    tip: 'การสะกด: stop → stopped, study → studied, like → liked',
-  },
-  ex: [
-    mc('I ___ a great film yesterday.', ['see', 'saw', 'seen'], 1, 'yesterday ใช้ Past Simple และ see เป็นกริยาไม่ปกติ: saw'),
-    mc('___ she call you last night?', ['Did', 'Does', 'Was'], 0, 'คำถาม Past Simple ใช้ Did'),
-    fill('We ___ this sofa two years ago. (buy)', ['bought'], 'buy – bought (กริยาไม่ปกติ)'),
-    fill('He ___ the exam. (not pass)', ['didn\'t pass', 'did not pass'], 'ปฏิเสธ: didn\'t + กริยาช่อง 1'),
-    order(['Where', 'did', 'you', 'go', 'last', 'summer?'], 'ฤดูร้อนที่แล้วคุณไปไหนมา', 'Wh- + did + ประธาน + กริยาช่อง 1'),
-    mc('She ___ to the party because she was tired.', ['didn\'t go', 'doesn\'t go', 'didn\'t went'], 0, 'didn\'t + go (ช่อง 1)'),
-    mc('When I ___ ten, I lived in Chiang Mai.', ['am', 'was', 'were'], 1, 'be ในอดีต: I / he / she / it = was'),
-  ],
-},
-{
-  id: 'pco', code: 'A2', line: 'past', title: 'Past Continuous', th: 'อดีตกำลังดำเนินอยู่', tag: 'ฉากหลัง และเหตุการณ์ที่ถูกขัดจังหวะ', tl: 'span',
-  story: { title: 'คืนไฟดับ', lines: [
-    ['Mai', 'Last night, I [[was cooking]] dinner when the lights [[went]] out.', 'เมื่อคืนฉันกำลังทำอาหารเย็นอยู่ ไฟก็ดับพอดี'],
-    ['Tom', 'What [[were]] you [[doing]] exactly?', 'ตอนนั้นคุณกำลังทำอะไรอยู่เหรอ'],
-    ['Mai', 'I [[was stirring]] the soup, and my cat [[was sleeping]] next to me.', 'ฉันกำลังคนซุป และแมวนอนหลับอยู่ข้างๆ'],
-    ['Tom', 'Then what happened?', 'แล้วเกิดอะไรขึ้น'],
-    ['Mai', 'The cat [[jumped]] up and the soup [[fell]] on the floor. While I [[was cleaning]], the power came back!', 'แมวกระโดดขึ้น ซุปหกลงพื้น ขณะที่ฉันกำลังเช็ดอยู่ ไฟก็กลับมา!'],
-  ] },
-  rules: {
-    form: [['+', 'I / he / she / it <b>was</b> working', 'you / we / they <b>were</b> working'], ['−', 'I <b>wasn\'t</b> working', 'we <b>weren\'t</b> working'], ['?', '<b>Was</b> he working?', '<b>Were</b> you working?']],
-    uses: [
-      ['กำลังทำอยู่ ณ เวลาหนึ่งในอดีต', 'At 8 p.m. yesterday, I was watching TV.'],
-      ['เหตุการณ์ยาว (continuous) ถูกขัดจังหวะด้วยเหตุการณ์สั้น (simple)', 'I was walking home when it started to rain.'],
-      ['สองเหตุการณ์เกิดพร้อมกัน (while)', 'While she was cooking, he was setting the table.'],
-    ],
-    signals: ['while', 'when', 'at 8 p.m. yesterday', 'all evening', 'at that moment'],
-    mistakes: [
-      ['I cooking when he called.', 'I was cooking when he called.', 'ต้องมี was / were นำหน้ากริยา -ing'],
-      ['We were knowing the answer.', 'We knew the answer.', 'กริยาแสดงสภาวะไม่ใช้ -ing ใช้ Past Simple'],
-      ['I was losing my keys while I was running.', 'I lost my keys while I was running.', 'การทำหายเป็นเหตุการณ์สั้น ใช้ Past Simple'],
-    ],
-    tip: 'จำง่ายๆ: ฉากหลังที่ยาว = was / were + -ing, เหตุการณ์สั้นที่แทรกเข้ามา = Past Simple',
-  },
-  ex: [
-    mc('At nine o\'clock last night, I ___ a book.', ['read', 'was reading', 'am reading'], 1, 'ณ เวลาหนึ่งในอดีต กำลังทำอยู่ ใช้ Past Continuous'),
-    mc('She ___ when the phone rang.', ['slept', 'was sleeping', 'sleeps'], 1, 'การนอนเป็นเหตุการณ์ยาว ถูกเสียงโทรศัพท์ (สั้น) ขัดจังหวะ'),
-    fill('They ___ cards when the lights went out. (play)', ['were playing'], 'they + were + กริยา -ing'),
-    fill('I ___ when the teacher explained it. (not listen)', ['wasn\'t listening', 'was not listening'], 'ปฏิเสธ: wasn\'t + กริยา -ing'),
-    mc('While we ___ dinner, the doorbell rang.', ['have', 'were having', 'will have'], 1, 'while + เหตุการณ์ที่กำลังดำเนินอยู่ในอดีต'),
-    order(['What', 'were', 'you', 'doing', 'at', 'midnight?'], 'ตอนเที่ยงคืนคุณกำลังทำอะไรอยู่', 'Wh- + were + you + กริยา -ing'),
-    mc('I ___ my keys while I was running.', ['lost', 'was losing', 'lose'], 0, 'การทำของหายเกิดขึ้นครั้งเดียว ใช้ Past Simple'),
-  ],
-},
-{
-  id: 'pp', code: 'A3', line: 'past', hub: true, title: 'Present Perfect', th: 'ปัจจุบันสมบูรณ์', tag: 'อดีตที่เชื่อมมาถึงตอนนี้', tl: 'perfect',
-  story: { title: 'ทริปแรกของ Mai', lines: [
-    ['Tom', '[[Have]] you ever [[been]] to Japan?', 'เคยไปญี่ปุ่นไหม'],
-    ['Mai', 'Yes! I\'ve [[visited]] Tokyo twice. I [[went]] first in 2022, and again last spring.', 'เคย! ฉันไปโตเกียวมาสองครั้ง ครั้งแรกปี 2022 และอีกครั้งฤดูใบไม้ผลิที่แล้ว'],
-    ['Tom', 'Wow. I\'ve [[never left]] Thailand.', 'ว้าว ผมไม่เคยออกนอกประเทศไทยเลย'],
-    ['Mai', 'Really? [[Have]] you [[tried]] sushi at least?', 'จริงเหรอ แล้วเคยลองซูชิไหม'],
-    ['Tom', 'Not yet. But I\'ve just [[booked]] a ticket to Osaka!', 'ยังเลย แต่ผมเพิ่งจองตั๋วไปโอซากา!'],
-  ] },
-  rules: {
-    form: [['+', 'I / you / we / they <b>have</b> worked', 'he / she / it <b>has</b> worked'], ['−', 'I <b>haven\'t</b> worked', 'she <b>hasn\'t</b> worked'], ['?', '<b>Have</b> you worked?', '<b>Has</b> she worked?']],
-    uses: [
-      ['ประสบการณ์ในชีวิต (ไม่บอกเวลาที่ชัดเจน)', 'I\'ve been to Japan twice.'],
-      ['อดีตที่ยังเกี่ยวกับตอนนี้ (ผลลัพธ์)', 'I\'ve lost my keys. (ตอนนี้ยังหาไม่เจอ)'],
-      ['เริ่มในอดีตและยังต่อเนื่อง (for / since)', 'She has lived here for ten years.'],
-    ],
-    signals: ['ever', 'never', 'already', 'yet', 'just', 'so far', 'for', 'since', 'recently'],
-    irr: ['be – been', 'go – gone / been', 'see – seen', 'eat – eaten', 'do – done', 'write – written', 'take – taken', 'buy – bought', 'have – had'],
-    mistakes: [
-      ['I have seen him yesterday.', 'I saw him yesterday.', 'yesterday คือเวลาในอดีตที่ชัดเจน ต้องใช้ Past Simple'],
-      ['She has live here since 2019.', 'She has lived here since 2019.', 'have / has + กริยาช่อง 3'],
-      ['I am here for two hours.', 'I have been here for two hours.', 'for + ระยะเวลาที่ต่อเนื่องถึงตอนนี้ ใช้ Present Perfect'],
-    ],
-    tip: 'for + ระยะเวลา (for 3 years) · since + จุดเริ่มต้น (since 2020) · ถ้าบอกเวลาอดีตชัดเจน (yesterday, in 2022) ให้ใช้ Past Simple',
-  },
-  ex: [
-    mc('I have never ___ sushi.', ['eat', 'ate', 'eaten'], 2, 'have + กริยาช่อง 3: eat – ate – eaten'),
-    mc('She ___ in London since 2019.', ['lived', 'has lived', 'lives'], 1, 'since 2019 เริ่มในอดีตและยังอยู่ ใช้ Present Perfect'),
-    fill('We ___ the project. (already / finish)', ['have already finished', '\'ve already finished'], 'have + already + กริยาช่อง 3'),
-    fill('He ___ here for ten years. (live)', ['has lived', '\'s lived'], 'he + has + กริยาช่อง 3'),
-    mc('I ___ him yesterday.', ['have seen', 'saw', 'see'], 1, 'yesterday คือเวลาที่ชัดเจน ต้องใช้ Past Simple'),
-    order(['Have', 'you', 'ever', 'been', 'to', 'Japan?'], 'คุณเคยไปญี่ปุ่นไหม', 'Have + ประธาน + ever + กริยาช่อง 3'),
-    mc('She has lived here ___ 2019.', ['for', 'since', 'during'], 1, '2019 คือจุดเริ่มต้น ใช้ since (for ใช้กับระยะเวลา)'),
-  ],
-},
-{
-  id: 'ppf', code: 'A4', line: 'past', title: 'Past Perfect', th: 'อดีตสมบูรณ์', tag: 'เกิดก่อนอีกเหตุการณ์ในอดีต', tl: 'before',
-  story: { title: 'รถไฟขบวนที่ตกไป', lines: [
-    ['Mai', 'When I [[arrived]] at the station, the train [[had left]].', 'พอฉันถึงสถานี รถไฟออกไปแล้ว'],
-    ['Tom', 'Oh no! [[Had]] you [[checked]] the time before you left home?', 'ตายจริง ก่อนออกจากบ้านเช็กเวลาไว้หรือเปล่า'],
-    ['Mai', 'No, I [[hadn\'t]]. I [[had forgotten]] my phone, so I [[went]] back for it.', 'ไม่ได้เช็ก ฉันลืมโทรศัพท์ เลยต้องกลับไปเอา'],
-    ['Tom', 'So the phone made you miss the train!', 'โทรศัพท์ทำให้คุณตกรถไฟเลยสินะ'],
-    ['Mai', 'Yes. After I [[had waited]] for an hour, I finally [[caught]] the next one.', 'ใช่ พอรอไปหนึ่งชั่วโมง ในที่สุดก็ขึ้นขบวนถัดไปได้'],
-  ] },
-  rules: {
-    form: [['+', 'I / you / he / we / they <b>had</b> worked', 'ใช้ had กับทุกประธาน'], ['−', 'I <b>hadn\'t</b> worked', 'hadn\'t + กริยาช่อง 3'], ['?', '<b>Had</b> you worked?', 'Had + ประธาน + กริยาช่อง 3']],
-    uses: [
-      ['เหตุการณ์ที่เกิดก่อนอีกเหตุการณ์ในอดีต', 'When I arrived, the film had started. (หนังเริ่มก่อน)'],
-      ['อธิบายสาเหตุของสิ่งที่เกิดในอดีต', 'She was tired because she hadn\'t slept.'],
-    ],
-    signals: ['before', 'after', 'when', 'by the time', 'already', 'just', 'never … before'],
-    irr: ['leave – left', 'forget – forgotten', 'go – gone', 'eat – eaten', 'see – seen', 'finish – finished'],
-    mistakes: [
-      ['When I arrived, the film started.', 'When I arrived, the film had started.', 'ถ้าหนังเริ่มก่อนที่ฉันจะถึง ต้องใช้ had started'],
-      ['She had went home.', 'She had gone home.', 'had + กริยาช่อง 3 (go – went – gone)'],
-      ['I had not saw him before.', 'I hadn\'t seen him before.', 'hadn\'t + กริยาช่อง 3'],
-    ],
-    tip: 'ถ้าเล่าเรื่องตามลำดับเวลา ใช้ Past Simple ได้เลย (I got up, had breakfast and left.) ใช้ Past Perfect เฉพาะตอนต้องย้อนไปเล่าเหตุการณ์ที่เกิดก่อน',
-  },
-  ex: [
-    mc('By the time I got to the station, the train ___.', ['left', 'had left', 'leaves'], 1, 'รถไฟออกก่อนที่ฉันจะถึง ใช้ Past Perfect'),
-    mc('When we arrived, the film ___.', ['started', 'had started', 'was start'], 1, 'หนังเริ่มก่อนที่เราจะมาถึง'),
-    fill('After she ___ her homework, she watched TV. (finish)', ['had finished'], 'เสร็จการบ้านก่อนดูทีวี: had + กริยาช่อง 3'),
-    fill('I ___ sushi before that trip. (never / eat)', ['had never eaten', 'hadn\'t eaten'], 'had never + กริยาช่อง 3'),
-    mc('Which is correct?', ['She had went home.', 'She had gone home.', 'She had go home.'], 1, 'had + กริยาช่อง 3: go – went – gone'),
-    order(['They', 'had', 'already', 'left', 'when', 'I', 'arrived.'], 'ตอนที่ฉันมาถึง พวกเขาออกไปแล้ว', 'had + already + กริยาช่อง 3'),
-    mc('Which happened first? "When Tom called, Mai had gone out."', ['Tom called', 'Mai went out', 'At the same time'], 1, 'had gone out คือเหตุการณ์ที่เกิดก่อน'),
-  ],
-},
-{
-  id: 'fu', code: 'F1', line: 'future', title: 'Will / Going to', th: 'อนาคต will และ be going to', tag: 'ตัดสินใจทันที แผนที่วางไว้ การทำนาย', tl: 'future',
-  story: { title: 'แผนซัมเมอร์', lines: [
-    ['Mai', 'This summer, I\'m [[going to]] learn to surf.', 'ซัมเมอร์นี้ฉันจะไปเรียนเล่นเซิร์ฟ'],
-    ['Tom', 'Really? I think you [[will]] love it.', 'จริงเหรอ ผมว่าคุณต้องชอบแน่ๆ'],
-    ['Mai', 'I\'ve already booked the lessons. They start next week.', 'ฉันจองคลาสไว้แล้ว เริ่มสัปดาห์หน้า'],
-    ['Tom', 'Look at the sky! It\'s [[going to]] rain this afternoon.', 'ดูท้องฟ้าสิ! บ่ายนี้ฝนจะตกแน่'],
-    ['Mai', 'Oh no, I forgot my umbrella.', 'ตายจริง ฉันลืมร่ม'],
-    ['Tom', 'Don\'t worry, [[I\'ll]] lend you mine.', 'ไม่ต้องห่วง เดี๋ยวผมให้ยืมของผมเอง'],
-    ['Mai', 'Thanks! I [[won\'t]] forget it again.', 'ขอบใจ ฉันจะไม่ลืมอีกแล้ว'],
-  ] },
-  rules: {
-    form: [['will', 'I <b>will</b> go · I\'ll go', 'I <b>won\'t</b> go · <b>Will</b> you go?'], ['going to', 'I <b>am going to</b> go', 'he <b>is going to</b> go · they <b>are going to</b> go'], ['นัดหมาย', 'I <b>am meeting</b> Anna at 5', 'Present Continuous ใช้กับแผนที่นัดแน่นอนแล้ว']],
-    uses: [
-      ['will: ตัดสินใจทันที ณ ตอนพูด', 'It\'s cold. I\'ll close the window.'],
-      ['will: คำทำนายจากความเห็น (I think / probably) สัญญา เสนอช่วย', 'I think it will be a great year. · I\'ll help you with that.'],
-      ['going to: แผนที่ตัดสินใจไว้แล้ว', 'I\'m going to study medicine.'],
-      ['going to: ทำนายจากหลักฐานที่เห็นตอนนี้', 'Look at those clouds! It\'s going to rain.'],
-    ],
-    signals: ['tomorrow', 'next week', 'soon', 'in two days', 'tonight', 'I think', 'probably'],
-    mistakes: [
-      ['I will to go.', 'I will go.', 'will + กริยาช่อง 1 ไม่มี to'],
-      ['She will goes home.', 'She will go home.', 'หลัง will กริยาไม่เติม -s'],
-      ['The phone is ringing. I\'m going to answer it.', 'The phone is ringing. I\'ll answer it.', 'ตัดสินใจทันที ใช้ will'],
-    ],
-    tip: 'ถามตัวเองว่า "ตัดสินใจไว้ก่อนแล้วหรือเพิ่งตัดสินใจตอนนี้" ถ้าก่อนแล้ว = going to, ถ้าตอนนี้ = will',
-  },
-  ex: [
-    mc('The phone is ringing. I ___ get it!', ['\'ll', '\'m going to', '\'m getting'], 0, 'ตัดสินใจทันที ณ ตอนพูด ใช้ will'),
-    mc('Look at those black clouds! It ___ rain.', ['will', 'is going to', 'is raining'], 1, 'มีหลักฐานที่เห็นอยู่ตอนนี้ (เมฆดำ) ใช้ going to'),
-    fill('I think she ___ the exam easily. (pass)', ['will pass', '\'ll pass'], 'I think + will + กริยาช่อง 1 (ความเห็น)'),
-    fill('We ___ late, I promise. (not / be)', ['won\'t be', 'will not be'], 'สัญญา ใช้ will; ปฏิเสธ won\'t + be'),
-    mc('I\'ve decided! I ___ a new phone next week.', ['will buy', 'am going to buy', 'buy'], 1, 'ตัดสินใจไว้แล้ว ใช้ be going to'),
-    order(['I', 'am', 'going', 'to', 'visit', 'my', 'grandma', 'tomorrow.'], 'พรุ่งนี้ฉันจะไปเยี่ยมคุณยาย', 'be going to + กริยาช่อง 1'),
-    mc('Which sentence is correct?', ['I will to call you.', 'I will call you.', 'I will calling you.'], 1, 'will + กริยาช่อง 1'),
-  ],
-},
-{
-  id: 'c1', code: 'F2', line: 'future', title: 'First Conditional', th: 'ประโยคเงื่อนไขแบบที่ 1', tag: 'ถ้า…แล้วจะ…', tl: 'branch',
-  story: { title: 'สัปดาห์สอบ', lines: [
-    ['Tom', 'If I [[study]] tonight, I [[\'ll pass]] the test tomorrow.', 'ถ้าคืนนี้ผมอ่านหนังสือ พรุ่งนี้ผมจะสอบผ่าน'],
-    ['Mai', 'And if you [[don\'t sleep]], you [[won\'t remember]] anything!', 'แล้วถ้าไม่นอน คุณจะจำอะไรไม่ได้เลยนะ'],
-    ['Tom', 'True. If I [[finish]] by ten, I [[will go]] to bed.', 'จริง ถ้าผมอ่านเสร็จก่อนสี่ทุ่ม ผมจะเข้านอน'],
-    ['Mai', '[[Unless]] you [[drink]] too much coffee, you\'ll sleep fine.', 'ถ้าไม่ดื่มกาแฟมากเกินไป ก็จะหลับสบาย'],
-    ['Tom', 'Deal. If you [[see]] me with a third cup, [[stop]] me!', 'ตกลง ถ้าเห็นผมถือแก้วที่สาม ห้ามผมด้วยนะ'],
-  ] },
-  rules: {
-    form: [['+', '<b>If</b> + Present Simple,', '<b>will</b> + กริยาช่อง 1'], ['−', 'If it <b>doesn\'t</b> rain,', 'we <b>won\'t</b> stay home'], ['สลับ', 'We will stay home <b>if</b> it rains.', 'สลับตำแหน่งได้ ไม่ต้องใส่จุลภาค']],
-    uses: [
-      ['สถานการณ์ที่เป็นไปได้ในอนาคตและผลที่ตามมา', 'If it rains, we\'ll stay home.'],
-      ['คำเตือน สัญญา ข้อเสนอ', 'If you touch that, you\'ll get burned.'],
-      ['unless = if … not', 'Unless you hurry, you\'ll miss the bus.'],
-    ],
-    signals: ['if', 'unless', 'as soon as', 'when', 'in case'],
-    mistakes: [
-      ['If it will rain, we will stay home.', 'If it rains, we will stay home.', 'หลัง if ใช้ Present Simple ไม่ใช้ will'],
-      ['If I will see him, I will tell him.', 'If I see him, I will tell him.', 'เหมือนกัน: if + Present Simple'],
-      ['If she studies, she will to pass.', 'If she studies, she will pass.', 'will + กริยาช่อง 1 ไม่มี to'],
-    ],
-    tip: 'เงื่อนไขพูดถึงอนาคต แต่ฝั่ง if ใช้ Present Simple เสมอ ส่วนผลลัพธ์ใช้ will',
-  },
-  ex: [
-    mc('If it ___ tomorrow, we\'ll stay at home.', ['rains', 'will rain', 'rained'], 0, 'หลัง if ใช้ Present Simple'),
-    mc('If you ___ hard, you\'ll pass the exam.', ['study', 'will study', 'studied'], 0, 'if + Present Simple, will + กริยา'),
-    fill('If I ___ him, I\'ll tell him. (see)', ['see'], 'หลัง if ใช้ Present Simple: I see'),
-    fill('She ___ angry if you forget her birthday. (be)', ['will be', '\'ll be'], 'ผลลัพธ์ใช้ will + กริยาช่อง 1'),
-    mc('___ you hurry, you\'ll miss the bus.', ['Unless', 'If', 'When'], 0, 'unless = if … not (ถ้าคุณไม่รีบ)'),
-    order(['If', 'it', 'rains,', 'we', 'will', 'stay', 'home.'], 'ถ้าฝนตก เราจะอยู่บ้าน', 'If + Present Simple, will + กริยาช่อง 1'),
-    mc('Which sentence is correct?', ['If it will be sunny, we\'ll go out.', 'If it is sunny, we\'ll go out.', 'If it was sunny, we\'ll go out.'], 1, 'if + Present Simple, will + กริยา'),
-  ],
-},
-];
-const BYID = Object.fromEntries(UNITS.map((u) => [u.id, u]));
-
-const GUESS = [
-  ['I usually take the bus to work.', 'ps', 'usually บอกนิสัยประจำ'],
-  ['Shh! The baby is sleeping.', 'pc', 'Shh! บอกว่าตอนนี้กำลังเกิดขึ้น'],
-  ['We visited the museum last Sunday.', 'pa', 'last Sunday คือเวลาอดีตที่ชัดเจน'],
-  ['I was walking home when it started to rain.', 'pco', 'เหตุการณ์ยาว (was walking) ถูกเหตุการณ์สั้น (started) ขัดจังหวะ'],
-  ['She has lived in Phuket since 2018.', 'pp', 'since 2018 เริ่มในอดีตและยังต่อเนื่องถึงตอนนี้'],
-  ['When I got there, they had already eaten.', 'ppf', 'already และเกิดก่อน "got there"'],
-  ['I\'m going to start a new job in May.', 'fu', 'แผนที่ตัดสินใจไว้แล้ว'],
-  ['If you study, you will pass.', 'c1', 'If + Present Simple, will + กริยา'],
-  ['Water freezes at 0°C.', 'ps', 'ความจริงทางวิทยาศาสตร์'],
-  ['Right now, Tom is standing outside the café.', 'pc', 'right now = ตอนนี้'],
-  ['Have you ever been to Japan?', 'pp', 'ถามประสบการณ์โดยไม่บอกเวลา'],
-  ['I\'ll help you with those bags.', 'fu', 'เสนอช่วยทันที ใช้ will'],
-  ['What were you doing at nine last night?', 'pco', 'ถามสิ่งที่กำลังทำอยู่ ณ เวลาหนึ่งในอดีต'],
-  ['He didn\'t call me yesterday.', 'pa', 'yesterday + didn\'t + กริยาช่อง 1'],
-  ['By the time we arrived, the shop had closed.', 'ppf', 'ร้านปิดก่อนที่เราจะถึง'],
-  ['Unless you hurry, you will miss the train.', 'c1', 'unless = if … not'],
-];
-
-/* ───────── Timeline drawing ───────── */
-function timeline(kind) {
-  const y = 86, now = 300;
-  const T = (x, yy, txt, cls = '') => `<text x="${x}" y="${yy}" text-anchor="middle" class="${cls}">${esc(txt)}</text>`;
-  const dot = (x, r, cls = 'm', d = 0) => `<circle class="${cls} pop" style="animation-delay:${d}ms" cx="${x}" cy="${y}" r="${r}"/>`;
-  let body = '';
-  if (kind === 'habit') {
-    [60, 120, 180, 240, 300, 360, 420, 480, 540].forEach((x, i) => { body += dot(x, 7, 'm', i * 60); });
-    body += T(300, 44, 'ทำซ้ำเป็นประจำ ทั้งอดีต ปัจจุบัน อนาคต', 'lb');
-  } else if (kind === 'now') {
-    body += `<rect class="m pop" x="248" y="${y - 13}" width="104" height="26" rx="13"/>` + T(300, 52, 'กำลังเกิดขึ้นตอนนี้', 'lb') + T(300, 128, 'am / is / are + V-ing');
-  } else if (kind === 'point') {
-    body += dot(130, 11) + T(130, 56, 'เกิดและจบแล้ว', 'lb') + T(130, 128, 'yesterday · last week · in 2019');
-  } else if (kind === 'span') {
-    body += `<rect class="soft pop" x="70" y="${y - 13}" width="170" height="26" rx="13"/>` + dot(180, 11, 'm2', 250) +
-      T(155, 128, 'was / were + V-ing (ยาว)') + T(180, 56, 'เหตุการณ์สั้นแทรกเข้ามา', 'lb');
-  } else if (kind === 'perfect') {
-    body += `<rect class="soft pop" x="90" y="${y - 9}" width="210" height="18" rx="9"/>` + dot(130, 11, 'm2', 100) + dot(215, 11, 'm2', 200) +
-      `<circle class="m pop" style="animation-delay:300ms" cx="${now}" cy="${y}" r="12"/>` +
-      T(190, 56, 'เกิดในอดีต แต่เชื่อมถึงตอนนี้', 'lb') + T(190, 128, 'have / has + V3');
-  } else if (kind === 'before') {
-    body += dot(80, 13, 'm', 0) + dot(200, 13, 'm2', 250) +
-      `<path class="stroke" d="M96 ${y} H182"/><path class="stroke" d="M174 ${y - 7} L184 ${y} L174 ${y + 7}"/>` +
-      `<text class="num" x="80" y="${y + 5}">1</text><text class="num" x="200" y="${y + 5}">2</text>` +
-      T(80, 128, 'had + V3 (ก่อน)') + T(200, 128, 'Past Simple (หลัง)') + T(140, 56, 'เหตุการณ์ที่เกิดก่อน → หลัง', 'lb');
-  } else if (kind === 'future') {
-    body += `<path class="dash" d="M300 ${y - 12} C 340 20, 470 20, 520 ${y - 12}"/>` + dot(430, 11, 'm', 100) + dot(520, 11, 'm2', 300) +
-      T(430, 128, 'will (ตัดสินใจตอนนี้)') + T(520, 128, 'going to (แผน)') + T(430, 56, 'อนาคต', 'lb');
-  } else if (kind === 'branch') {
-    body += `<rect class="m pop" x="352" y="${y - 12}" width="24" height="24" rx="3" transform="rotate(45 364 ${y})"/>` +
-      `<path class="stroke" d="M388 ${y} H492"/><path class="stroke" d="M484 ${y - 7} L494 ${y} L484 ${y + 7}"/>` + dot(520, 11, 'm2', 300) +
-      T(364, 128, 'if + Present Simple') + T(520, 128, 'will + V1') + T(440, 56, 'ถ้าเงื่อนไขเกิด → ผลลัพธ์', 'lb');
-  }
-  return `<svg class="tl" viewBox="0 0 600 150" role="img" aria-label="ไทม์ไลน์">
-    <rect class="zone-past" x="14" y="26" width="276" height="108" rx="12"/>
-    <rect class="zone-fut" x="310" y="26" width="276" height="108" rx="12"/>
-    <line class="axis" x1="16" y1="${y}" x2="584" y2="${y}"/><path class="axis" d="M574 ${y - 8} L586 ${y} L574 ${y + 8}" fill="none"/>
-    <line class="nowline" x1="${now}" y1="30" x2="${now}" y2="120"/>
-    <text class="zl" x="30" y="20">อดีต · PAST</text><text class="zl" x="${now}" y="20" text-anchor="middle">NOW</text><text class="zl" x="570" y="20" text-anchor="end">อนาคต · FUTURE</text>
-    ${body}</svg>`;
+(()=>{'use strict';
+const DB = {"units":[{"id":"ps","code":"P1","line":"present","title":"Present Simple","th":"ปัจจุบันธรรมดา","tag":"กิจวัตร · ความจริง · ตารางเวลา","formula":"S + V1 (he/she/it + V-s/es)","uses":["สิ่งที่ทำเป็นประจำ","ข้อเท็จจริงทั่วไป","ตารางเวลาที่แน่นอน"],"signals":["always","usually","often","every day","on Mondays"],"example":"She works at a café every day.","meaning":"เธอทำงานที่คาเฟ่ทุกวัน","mistake":"She work → She works","dialogue":[["Mai","I work at a café near the station.","ฉันทำงานที่คาเฟ่ใกล้สถานี"],["Tom","Does the café open early?","คาเฟ่เปิดแต่เช้าไหม"],["Mai","Yes, it opens at six every day.","ใช่ เปิดหกโมงทุกวัน"]],"count":50},{"id":"pc","code":"P2","line":"present","title":"Present Continuous","th":"ปัจจุบันกำลังดำเนินอยู่","tag":"ตอนนี้ · ชั่วคราว · นัดหมาย","formula":"S + am/is/are + V-ing","uses":["สิ่งที่กำลังเกิดขึ้นตอนนี้","สถานการณ์ชั่วคราว","นัดหมายอนาคตที่ตกลงไว้"],"signals":["now","right now","at the moment","today","these days"],"example":"I am preparing dinner right now.","meaning":"ฉันกำลังเตรียมอาหารเย็นตอนนี้","mistake":"She working → She is working","dialogue":[["Tom","What are you doing right now?","ตอนนี้กำลังทำอะไร"],["Mai","I am making coffee for a customer.","ฉันกำลังชงกาแฟให้ลูกค้า"],["Tom","Are you meeting Anna tonight?","คืนนี้นัดเจอแอนนาไหม"]],"count":50},{"id":"pa","code":"A1","line":"past","title":"Past Simple","th":"อดีตธรรมดา","tag":"เหตุการณ์ที่จบไปแล้ว","formula":"S + V2 · Did + S + V1?","uses":["เหตุการณ์จบลงแล้วในอดีต","เล่าเหตุการณ์เรียงตามลำดับ","นิสัยในอดีต"],"signals":["yesterday","last week","in 2022","two days ago"],"example":"I visited Osaka last year.","meaning":"ฉันไปโอซากาเมื่อปีที่แล้ว","mistake":"Did you went? → Did you go?","dialogue":[["Mai","I went to the beach last Saturday.","วันเสาร์ที่แล้วฉันไปชายหาด"],["Tom","Did you swim?","คุณได้ว่ายน้ำไหม"],["Mai","No, I walked and ate ice cream.","ไม่ ฉันเดินเล่นแล้วกินไอศกรีม"]],"count":50},{"id":"pco","code":"A2","line":"past","title":"Past Continuous","th":"อดีตกำลังดำเนินอยู่","tag":"ฉากหลัง · ถูกขัดจังหวะ","formula":"S + was/were + V-ing","uses":["สิ่งที่กำลังทำ ณ เวลาใดเวลาหนึ่งในอดีต","เหตุการณ์ยาวที่มีเหตุการณ์สั้นแทรก","สองกิจกรรมที่เกิดพร้อมกัน"],"signals":["while","when","at 8 p.m. yesterday"],"example":"I was cooking when she called.","meaning":"ฉันกำลังทำอาหารอยู่ตอนที่เธอโทรมา","mistake":"I cooking → I was cooking","dialogue":[["Mai","I was cooking when the power went out.","ฉันกำลังทำอาหารอยู่ตอนไฟดับ"],["Tom","What were you doing?","ตอนนั้นคุณทำอะไรอยู่"],["Mai","I was stirring the soup.","ฉันกำลังคนซุป"]],"count":50},{"id":"pp","code":"A3","line":"past","title":"Present Perfect","th":"ปัจจุบันสมบูรณ์","tag":"อดีตที่ยังเชื่อมถึงปัจจุบัน","formula":"S + have/has + V3","uses":["ประสบการณ์ชีวิต","ผลลัพธ์ที่ยังเกี่ยวกับตอนนี้","สิ่งที่ดำเนินมาถึงปัจจุบัน"],"signals":["ever","never","already","yet","just","for","since"],"example":"She has lived here since 2020.","meaning":"เธออยู่ที่นี่มาตั้งแต่ปี 2020","mistake":"I have seen him yesterday → I saw him yesterday","dialogue":[["Tom","Have you ever been to Japan?","คุณเคยไปญี่ปุ่นไหม"],["Mai","Yes, I have visited Tokyo twice.","เคย ฉันไปโตเกียวมาสองครั้ง"],["Tom","I have never travelled abroad.","ฉันไม่เคยไปต่างประเทศเลย"]],"count":50},{"id":"ppf","code":"A4","line":"past","title":"Past Perfect","th":"อดีตสมบูรณ์","tag":"เกิดก่อนอีกเหตุการณ์ในอดีต","formula":"S + had + V3","uses":["เหตุการณ์ที่เกิดก่อนอีกเหตุการณ์ในอดีต","อธิบายเหตุผลของเหตุการณ์ในอดีต","เหตุการณ์ที่เสร็จสิ้นก่อนเวลาหนึ่งในอดีต"],"signals":["before","after","by the time","already"],"example":"The train had left when I arrived.","meaning":"รถไฟออกไปแล้วตอนที่ฉันมาถึง","mistake":"She had went → She had gone","dialogue":[["Mai","When I arrived, the train had left.","พอฉันไปถึง รถไฟออกไปแล้ว"],["Tom","Had you checked the time?","คุณเช็กเวลาแล้วหรือยัง"],["Mai","No, I had forgotten my phone.","ยังเลย ฉันลืมโทรศัพท์"]],"count":50},{"id":"fu","code":"F1","line":"future","title":"Future Forms","th":"รูปอนาคต","tag":"will · going to · นัดหมาย","formula":"S + will + V1 · S + be going to + V1","uses":["will: ตัดสินใจทันที / คำสัญญา","going to: แผนที่ตัดสินใจแล้ว","Present Continuous: นัดหมายแน่นอน"],"signals":["tomorrow","next week","soon","I think","Look!"],"example":"Look at those clouds! It is going to rain.","meaning":"ดูเมฆนั่นสิ! ฝนกำลังจะตก","mistake":"I will to call → I will call","dialogue":[["Mai","I am going to travel next month.","ฉันวางแผนจะเดินทางเดือนหน้า"],["Tom","Where will you go?","คุณจะไปไหน"],["Mai","I am flying to Osaka on Friday.","วันศุกร์ฉันมีแผนบินไปโอซากา"]],"count":50},{"id":"c1","code":"F2","line":"future","title":"First Conditional","th":"ประโยคเงื่อนไขแบบที่ 1","tag":"สิ่งที่อาจเกิดขึ้นในอนาคต","formula":"If + Present Simple, will + V1","uses":["เงื่อนไขอนาคตที่เป็นไปได้จริง","คำเตือนและผลลัพธ์","unless = if not"],"signals":["if","unless","when","as soon as"],"example":"If it rains, we will stay at home.","meaning":"ถ้าฝนตก เราจะอยู่บ้าน","mistake":"If it will rain → If it rains","dialogue":[["Tom","What will we do if it rains?","ถ้าฝนตกเราจะทำอย่างไร"],["Mai","If it rains, we will stay home.","ถ้าฝนตกเราจะอยู่บ้าน"],["Tom","We will go out if the weather improves.","เราจะออกไปถ้าอากาศดีขึ้น"]],"count":50}],"questions":{"ps":[{"t":"mc","q":"My sister ___ in a bank.","o":["works","work","is work"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"___ you often play football?","o":["Does","Do","Are"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"He ___ TV every evening. (watch)","a":["watches"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"She ___ spicy food. (not like)","a":["doesn't like","does not like"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["Does","your","brother","speak","English?"],"a":"Does your brother speak English?","th":"พี่ชายหรือน้องชายของคุณพูดภาษาอังกฤษไหม","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"Water ___ at 100 degrees Celsius.","o":["is boiling","boil","boils"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"The film ___ at 7:30 tonight.","o":["starts","start","starting"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"Every morning, Leo ___ tea before work.","o":["drink","drinks","is drink"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"My parents ___ in a small town.","o":["lives","is living","live"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"___ your sister drive to work?","o":["Does","Do","Is"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"The bakery ___ at six on weekdays.","o":["open","opens","opening"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"Birds ___ nests in spring.","o":["builds","are build","build"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"He ___ coffee; he prefers tea.","o":["doesn't drink","don't drink","isn't drink"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"___ they speak Korean at home?","o":["Does","Do","Are"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"I ___ my emails before lunch.","o":["checks","am check","check"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"She ___ English twice a week.","o":["studies","study","is study"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"The moon ___ around the Earth.","o":["move","moves","is move"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"This bus ___ at Central Station.","o":["stop","stopping","stops"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"They ___ lunch at noon every day.","o":["have","has","are have"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"This ticket ___ 100 baht.","o":["cost","costs","is cost"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"John ___ his room every Friday.","o":["clean","is clean","cleans"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"___ your dog like carrots?","o":["Does","Do","Is"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"The recipe ___ three eggs.","o":["need","needs","is need"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"Anna and Ben ___ tennis on Sundays.","o":["plays","are play","play"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"My brother ___ meat.","o":["doesn't eat","don't eat","isn't eat"],"a":0,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"___ the library close at six?","o":["Do","Does","Is"],"a":1,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"mc","q":"My best friend ___ to music before bed.","o":["listen","is listen","listens"],"a":2,"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"My aunt ___ in a hospital. (work)","a":["works"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"We ___ early on weekdays. (get up)","a":["get up"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"Tom ___ the dishes every night. (wash)","a":["washes"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"The baby ___ when she is hungry. (cry)","a":["cries"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"The train ___ at 6:45. (leave)","a":["leaves"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"I ___ scary films. (not enjoy)","a":["don't enjoy","do not enjoy"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"He ___ a car. (not own)","a":["doesn't own","does not own"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"___ your friends live nearby? (do)","a":["Do"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"___ her father cook dinner? (do)","a":["Does"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"My parents ___ dinner together. (make)","a":["make"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"She ___ to university on foot. (go)","a":["goes"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"The shop ___ at 8 p.m. (close)","a":["closes"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"My sister ___ French. (study)","a":["studies"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"Ice ___ when it gets warm. (melt)","a":["melts"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"We ___ to music on the train. (listen)","a":["listen"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"His phone ___ every morning. (ring)","a":["rings"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"I ___ the answer. (know)","a":["know"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"fill","q":"They ___ weekends at home. (spend)","a":["spend"],"why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["Do","your","colleagues","work","on","Fridays?"],"a":"Do your colleagues work on Fridays?","th":"เพื่อนร่วมงานของคุณทำงานวันศุกร์ไหม","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["What","time","does","the","shop","open?"],"a":"What time does the shop open?","th":"ร้านเปิดกี่โมง","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["My","father","never","drinks","coffee."],"a":"My father never drinks coffee.","th":"พ่อของฉันไม่เคยดื่มกาแฟ","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["How","often","do","you","exercise?"],"a":"How often do you exercise?","th":"คุณออกกำลังกายบ่อยแค่ไหน","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"},{"t":"order","words":["She","does","not","live","near","here."],"a":"She does not live near here.","th":"เธอไม่ได้อาศัยอยู่ใกล้ที่นี่","why":"Present Simple ใช้กับกิจวัตร ความจริง และตารางเวลา: ประธาน he/she/it เติม -s/-es และคำถามใช้ do/does"}],"pc":[{"t":"mc","q":"Be quiet! The baby ___.","o":["is sleeping","sleeps","sleep"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Look! It ___ outside.","o":["rains","is raining","rain"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"They ___ football at the moment. (play)","a":["are playing","'re playing"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"I ___ today. It's a holiday. (not work)","a":["am not working","'m not working"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["What","are","you","doing","right","now?"],"a":"What are you doing right now?","th":"ตอนนี้คุณกำลังทำอะไรอยู่","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"We ___ to the cinema tonight. I've already bought the tickets.","o":["go","goes","are going"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Which sentence is correct?","o":["I want a coffee.","I am wanting a coffee.","I'm want a coffee."],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"They ___ for the bus right now.","o":["wait","are waiting","is waiting"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Look! The dog ___ after the ball.","o":["runs","are running","is running"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"I ___ from home this week, not at the office.","o":["am working","is working","working"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Why ___ you smiling?","o":["do","are","is"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"She ___ a blue jacket at the moment.","o":["wears","are wearing","is wearing"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"We ___ a new app right now.","o":["are developing","develops","is developing"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Listen! Someone ___ at the door.","o":["knocks","is knocking","are knocking"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Mum ___ dinner now, so please wait.","o":["cooks","are cooking","is cooking"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"The children ___ in the garden at the moment.","o":["are playing","is playing","plays"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Where ___ he going now?","o":["are","is","does"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"I ___ a video call at the moment.","o":["have","is having","am having"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Please be quiet. Dad ___ on the phone.","o":["is talking","talks","are talking"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Today, Nina ___ at her friend's house temporarily.","o":["stays","is staying","are staying"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"The students ___ notes while the teacher speaks.","o":["is taking","takeing","are taking"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"___ it snowing outside now?","o":["Is","Are","Does"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"We ___ TV right now; we're studying.","o":["isn't watching","aren't watching","don't watching"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"My brother ___ for his missing keys at the moment.","o":["looks","are looking","is looking"],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"The price of rice ___ this month.","o":["is rising","are rising","riseing"],"a":0,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"You ___ too fast right now. Slow down!","o":["is driving","are driving","drives"],"a":1,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"mc","q":"Which sentence describes an action happening now?","o":["He eats lunch every day.","He ate lunch yesterday.","He is eating lunch."],"a":2,"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"I ___ an email now. (write)","a":["am writing","'m writing"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"She ___ in the pool at the moment. (swim)","a":["is swimming","'s swimming"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"They ___ a house this year. (build)","a":["are building","'re building"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"We ___ for the exam today. (study)","a":["are studying","'re studying"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"The cat ___ under the table now. (sleep)","a":["is sleeping","'s sleeping"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"My phone ___ again! (ring)","a":["is ringing","'s ringing"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"He ___ today because he is ill. (not work)","a":["isn't working","is not working"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"I ___ a coat because it is hot. (not wear)","a":["am not wearing","'m not wearing"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"The kids ___ at the moment. (not fight)","a":["aren't fighting","are not fighting"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"___ you listening to me? (be)","a":["Are"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"___ she coming with us? (be)","a":["Is"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"What ___ they doing now? (be)","a":["are"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"It ___ heavily outside now. (rain)","a":["is raining","'s raining"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"My cousin ___ to drive this month. (learn)","a":["is learning","'s learning"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"We ___ the kitchen this week. (paint)","a":["are painting","'re painting"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"I ___ for a taxi right now. (wait)","a":["am waiting","'m waiting"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"The baby ___ at her toy. (smile)","a":["is smiling","'s smiling"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"fill","q":"You ___ a lot of noise right now. (make)","a":["are making","'re making"],"why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["What","are","you","reading","right","now?"],"a":"What are you reading right now?","th":"ตอนนี้คุณกำลังอ่านอะไรอยู่","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["My","friends","are","waiting","outside."],"a":"My friends are waiting outside.","th":"เพื่อนๆ ของฉันกำลังรออยู่ข้างนอก","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["Is","your","mother","working","today?"],"a":"Is your mother working today?","th":"วันนี้แม่ของคุณกำลังทำงานอยู่ไหม","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["We","are","not","watching","television."],"a":"We are not watching television.","th":"ตอนนี้เราไม่ได้ดูโทรทัศน์","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"},{"t":"order","words":["Why","is","the","baby","crying?"],"a":"Why is the baby crying?","th":"ทำไมทารกถึงกำลังร้องไห้","why":"Present Continuous ใช้ am/is/are + กริยา -ing กับเหตุการณ์ที่กำลังเกิดขึ้นหรือสถานการณ์ชั่วคราว"}],"pa":[{"t":"mc","q":"I ___ a great film yesterday.","o":["saw","see","seen"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"___ she call you last night?","o":["Does","Did","Was"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"We ___ this sofa two years ago. (buy)","a":["bought"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"He ___ the exam. (not pass)","a":["didn't pass","did not pass"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["Where","did","you","go","last","summer?"],"a":"Where did you go last summer?","th":"ฤดูร้อนที่แล้วคุณไปไหนมา","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"She ___ to the party because she was tired.","o":["doesn't go","didn't went","didn't go"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"When I ___ ten, I lived in Chiang Mai.","o":["was","am","were"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"They ___ to Phuket last month.","o":["travel","travelled","travelling"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"I ___ my phone yesterday.","o":["lose","losed","lost"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"___ you finish your homework last night?","o":["Did","Do","Were"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"She ___ late for school on Monday.","o":["were","was","is"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"My friends ___ at home yesterday.","o":["was","are","were"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"We ___ a new car in 2021.","o":["bought","buyed","buy"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"He ___ a long email last night.","o":["write","wrote","written"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"The meeting ___ at 4 p.m. yesterday.","o":["ends","ending","ended"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"I ___ breakfast before leaving home yesterday.","o":["ate","eaten","eat"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"Where ___ they go last weekend?","o":["do","did","were"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"She ___ the answer in yesterday's test.","o":["knowed","knows","knew"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"I ___ see him at the party last night.","o":["didn't","don't","wasn't"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"The children ___ in the park yesterday.","o":["plays","played","play"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"He ___ his wallet on the bus last Tuesday.","o":["leaved","leave","left"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"We ___ a lot of photos on our trip last June.","o":["took","taken","take"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"She ___ to my message two days ago.","o":["replyed","replied","replies"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"My team ___ the match last Sunday.","o":["winned","win","won"],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"I ___ very tired after the flight yesterday.","o":["felt","feel","feeling"],"a":0,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"They ___ dinner together last night.","o":["have","had","has"],"a":1,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"mc","q":"Which sentence is in Past Simple?","o":["I have visited Bangkok.","I am visiting Bangkok.","I visited Bangkok last year."],"a":2,"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"I ___ my grandmother last weekend. (visit)","a":["visited"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"He ___ home at ten yesterday. (come)","a":["came"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"We ___ the museum on Tuesday. (see)","a":["saw"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"She ___ a cake for the party. (make)","a":["made"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"They ___ the bus yesterday morning. (miss)","a":["missed"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"My brother ___ his bike last week. (fix)","a":["fixed"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"I ___ the question in class yesterday. (not understand)","a":["didn't understand","did not understand"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"She ___ to the office last Friday. (not go)","a":["didn't go","did not go"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"___ you call Anna yesterday? (do)","a":["Did"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"Where ___ he sleep last night? (do)","a":["did"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"The weather ___ beautiful yesterday. (be)","a":["was"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"My shoes ___ wet after the storm. (be)","a":["were"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"We ___ early on Saturday. (wake up)","a":["woke up"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"He ___ a present for his mum last year. (choose)","a":["chose"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"The film ___ at eight last night. (begin)","a":["began"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"I ___ the last train yesterday. (catch)","a":["caught"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"They ___ the restaurant in 2020. (open)","a":["opened"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"fill","q":"She ___ happy when she saw the result. (feel)","a":["felt"],"why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["Where","did","you","spend","your","holiday?"],"a":"Where did you spend your holiday?","th":"คุณไปใช้เวลาวันหยุดที่ไหน","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["I","bought","a","new","notebook","yesterday."],"a":"I bought a new notebook yesterday.","th":"ฉันซื้อสมุดใหม่เมื่อวาน","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["Did","your","friends","enjoy","the","concert?"],"a":"Did your friends enjoy the concert?","th":"เพื่อนของคุณสนุกกับคอนเสิร์ตไหม","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["She","did","not","finish","her","homework."],"a":"She did not finish her homework.","th":"เธอทำการบ้านไม่เสร็จ","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"},{"t":"order","words":["We","went","to","the","beach","last","Sunday."],"a":"We went to the beach last Sunday.","th":"เราไปชายหาดเมื่อวันอาทิตย์ที่แล้ว","why":"Past Simple ใช้กริยาช่อง 2 กับอดีตที่จบแล้ว คำถามและปฏิเสธใช้ did + กริยาช่อง 1"}],"pco":[{"t":"mc","q":"At nine o'clock last night, I ___ a book.","o":["was reading","read","am reading"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"She ___ when the phone rang.","o":["slept","was sleeping","sleeps"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"They ___ cards when the lights went out. (play)","a":["were playing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"I ___ when the teacher explained it. (not listen)","a":["wasn't listening","was not listening"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"While we ___ dinner, the doorbell rang.","o":["have","will have","were having"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["What","were","you","doing","at","midnight?"],"a":"What were you doing at midnight?","th":"ตอนเที่ยงคืนคุณกำลังทำอะไรอยู่","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"I ___ my keys while I was running.","o":["lost","was losing","lose"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"At 10 p.m. yesterday, Mum ___ a book.","o":["read","was reading","is reading"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The boys ___ football when it began to rain.","o":["was playing","are playing","were playing"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"I ___ home when I saw an accident.","o":["was walking","walk","am walking"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"What ___ you doing at six yesterday?","o":["was","were","did"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"At 8 p.m. yesterday, she ___ while her brother was studying.","o":["is singing","were singing","was singing"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"We ___ dinner when you called.","o":["were eating","was eating","eat"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The dog ___ under the sofa at that moment.","o":["were sleeping","was sleeping","sleeps"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"They ___ to music when the door opened.","o":["was listening","listen","were listening"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"While I was cooking, the phone suddenly ___.","o":["rang","ring","ringing"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"He ___ a shower when the electricity went off.","o":["were taking","was taking","takes"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"Which is correct for a long past action?","o":["They was waiting at eight.","They waiting at eight.","They were waiting at eight."],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The children ___ when their mother arrived.","o":["were laughing","was laughing","are laughing"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"While we ___, it suddenly started to snow.","o":["are hiking","were hiking","is hiking"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"I ___ attention when the teacher asked me.","o":["weren't paying","didn't paying","wasn't paying"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"___ she working at midnight?","o":["Was","Were","Did"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The wind ___ strongly at eight yesterday evening.","o":["were blowing","was blowing","blow"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"My friends ___ along the river at sunset yesterday.","o":["was cycling","cycle","were cycling"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The baby ___ when the alarm rang.","o":["was crying","were crying","cries"],"a":0,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"The lights went out while we ___ a film.","o":["are watching","were watching","was watching"],"a":1,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"mc","q":"I suddenly ___ my umbrella while I was running for the bus.","o":["was drop","drop","dropped"],"a":2,"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"She ___ dinner when I arrived. (prepare)","a":["was preparing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"We ___ for the train at eight. (wait)","a":["were waiting"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"I ___ at midnight last night. (sleep)","a":["was sleeping"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"They ___ in the garden when it rained. (work)","a":["were working"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"He ___ a letter when the phone rang. (write)","a":["was writing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"The children ___ when I entered. (dance)","a":["were dancing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"Mum ___ TV at that time. (not watch)","a":["wasn't watching","was not watching"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"We ___ at nine last night. (not study)","a":["weren't studying","were not studying"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"I ___ to music when you knocked. (not listen)","a":["wasn't listening","was not listening"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"___ you driving when it happened? (be)","a":["Were"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"___ she sleeping at ten? (be)","a":["Was"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"What ___ they doing when you arrived? (be)","a":["were"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"The sun ___ as we left the beach. (set)","a":["was setting"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"The workers ___ the road at eight yesterday. (repair)","a":["were repairing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"My brother ___ a computer game at eight last night. (play)","a":["was playing"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"We ___ home when it began to rain. (walk)","a":["were walking"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"The cat ___ on the chair when I saw it. (sit)","a":["was sitting"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"fill","q":"She ___ her bike when she fell. (ride)","a":["was riding"],"why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["What","were","you","doing","at","eight?"],"a":"What were you doing at eight?","th":"ตอนสองทุ่มคุณกำลังทำอะไรอยู่","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["I","was","cooking","when","he","called."],"a":"I was cooking when he called.","th":"ฉันกำลังทำอาหารอยู่ตอนที่เขาโทรมา","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["They","were","watching","television","last","night."],"a":"They were watching television last night.","th":"เมื่อคืนพวกเขากำลังดูโทรทัศน์อยู่","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["Was","she","sleeping","when","you","arrived?"],"a":"Was she sleeping when you arrived?","th":"เธอกำลังนอนหลับตอนคุณมาถึงหรือไม่","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"},{"t":"order","words":["We","were","not","listening","to","music."],"a":"We were not listening to music.","th":"ตอนนั้นเราไม่ได้กำลังฟังเพลง","why":"Past Continuous ใช้ was/were + กริยา -ing กับเหตุการณ์ที่กำลังดำเนินในอดีต"}],"pp":[{"t":"mc","q":"I have never ___ sushi.","o":["eaten","eat","ate"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"She ___ in London since 2019.","o":["lived","has lived","lives"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"We ___ the project. (already / finish)","a":["have already finished","'ve already finished"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"He ___ here for ten years. (live)","a":["has lived","'s lived"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"I ___ him yesterday.","o":["have seen","see","saw"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["Have","you","ever","been","to","Japan?"],"a":"Have you ever been to Japan?","th":"คุณเคยไปญี่ปุ่นไหม","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"She has lived here ___ 2019.","o":["since","for","during"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"Have you ever ___ Korean food?","o":["try","tried","trying"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"She has ___ her keys, so she can't enter.","o":["lose","losing","lost"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"We have lived here ___ five years.","o":["for","since","during"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"They have known each other ___ 2020.","o":["for","since","from"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"He ___ finished his lunch yet.","o":["haven't","didn't","hasn't"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"I have ___ seen that film twice.","o":["already","yesterday","last"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"___ you ever flown on a plane?","o":["Has","Have","Did"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"My sister ___ just arrived home.","o":["have","did","has"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"We haven't finished our work ___.","o":["yet","already","yesterday"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"He has ___ three books this month.","o":["reads","read","reading"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"This is the best cake I've ever ___.","o":["ate","eat","eaten"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"Anna ___ worked at this company since April.","o":["has","have","is"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"I ___ seen him this week.","o":["hasn't","haven't","didn't"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"She has ___ to Australia three times.","o":["went","go","been"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"The children have ___ their homework.","o":["done","did","do"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"Have they ___ the new manager yet?","o":["meet","met","meeting"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"I have never ___ a horse.","o":["rode","ride","ridden"],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"How long ___ you lived in Bangkok?","o":["have","has","did"],"a":0,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"He has ___ the window by accident.","o":["broke","broken","break"],"a":1,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"mc","q":"Which sentence describes an experience up to now?","o":["I visited Japan in 2022.","I visit Japan each year.","I have visited Japan twice."],"a":2,"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"I ___ this movie before. (see)","a":["have seen","'ve seen"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"He ___ his homework already. (finish)","a":["has finished","'s finished"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"They ___ to London twice. (be)","a":["have been","'ve been"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"We ___ here since January. (live)","a":["have lived","'ve lived"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"She ___ the email yet. (not send)","a":["hasn't sent","has not sent"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"I ___ breakfast yet. (not have)","a":["haven't had","have not had"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"___ you ever tried skiing? (have)","a":["Have"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"___ your mum finished work yet? (have)","a":["Has"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"He has ___ his wallet again. (lose)","a":["lost"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"We have ___ a new sofa. (buy)","a":["bought"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"I ___ never eaten octopus. (have)","a":["have"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"She ___ just left the building. (have)","a":["has"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"They ___ friends for ten years. (be)","a":["have been","'ve been"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"My brother ___ his arm. (break)","a":["has broken","'s broken"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"The guests ___ already arrived. (have)","a":["have"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"I have ___ that song many times. (hear)","a":["heard"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"How long ___ you worked here? (have)","a":["have"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"fill","q":"He ___ a lot of progress so far. (make)","a":["has made","'s made"],"why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["Have","you","ever","visited","Chiang","Mai?"],"a":"Have you ever visited Chiang Mai?","th":"คุณเคยไปเชียงใหม่ไหม","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["She","has","already","cleaned","her","room."],"a":"She has already cleaned her room.","th":"เธอทำความสะอาดห้องเรียบร้อยแล้ว","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["We","have","lived","here","for","years."],"a":"We have lived here for years.","th":"เราอาศัยอยู่ที่นี่มาหลายปีแล้ว","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["I","have","never","tried","Indian","food."],"a":"I have never tried Indian food.","th":"ฉันไม่เคยลองอาหารอินเดีย","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"},{"t":"order","words":["Has","your","brother","finished","his","homework?"],"a":"Has your brother finished his homework?","th":"พี่ชายหรือน้องชายของคุณทำการบ้านเสร็จแล้วหรือยัง","why":"Present Perfect ใช้ have/has + กริยาช่อง 3 เพื่อบอกประสบการณ์หรือเหตุการณ์ที่ยังเชื่อมกับปัจจุบัน"}],"ppf":[{"t":"mc","q":"By the time I got to the station, the train ___.","o":["had left","left","leaves"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"When we arrived, the film ___.","o":["started","had started","was start"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"After she ___ her homework, she watched TV. (finish)","a":["had finished"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"I ___ sushi before that trip. (never / eat)","a":["had never eaten","hadn't eaten"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"Which is correct?","o":["She had went home.","She had go home.","She had gone home."],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["They","had","already","left","when","I","arrived."],"a":"They had already left when I arrived.","th":"ตอนที่ฉันมาถึง พวกเขาออกไปแล้ว","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"Which happened first? \"When Tom called, Mai had gone out.\"","o":["Mai went out","Tom called","At the same time"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"By the time we arrived, the show ___.","o":["has begun","had begun","begins"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"She was upset because she ___ her passport.","o":["has lost","loses","had lost"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"I ___ never seen snow before that trip.","o":["had","have","did"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"The room was clean because Mum ___ it.","o":["has cleaned","had cleaned","cleans"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"___ you finished eating before they arrived?","o":["Have","Did","Had"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"He couldn't pay because he ___ his wallet at home.","o":["had left","has left","leaves"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"When they reached the cinema, the film ___.","o":["has started","had started","starts"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"We ___ already booked a room before we flew.","o":["have","were","had"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"She knew the answer because she ___ the chapter.","o":["had read","has read","reads"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"My phone was dead because I ___ to charge it.","o":["have forgotten","had forgotten","forget"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"He ___ never driven before he got his licence.","o":["has","was","had"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"After I ___ the dishes, I went to bed.","o":["had washed","have washed","wash"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"The train had ___ before we reached the platform.","o":["leave","left","leaving"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"They were hungry because they ___ breakfast.","o":["have skipped","skip","had skipped"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"I didn't recognise him because he ___ his hair.","o":["had cut","has cut","cuts"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"She found the book she ___ the week before.","o":["has lost","had lost","loses"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"Had he ___ his homework before dinner?","o":["did","do","done"],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"They were tired because they ___ all day.","o":["had worked","have worked","work"],"a":0,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"The cake was gone because the children ___ it.","o":["have eaten","had eaten","eat"],"a":1,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"mc","q":"Which event came first? I had eaten before she called.","o":["She called.","Both happened at once.","I ate."],"a":2,"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"By noon, we ___ the report. (finish)","a":["had finished","'d finished"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"She ___ before I called. (leave)","a":["had left","'d left"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"I ___ him before that day. (never meet)","a":["had never met","'d never met"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"They ___ their tickets before the trip. (book)","a":["had booked","'d booked"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"The taxi ___ by the time I came out. (go)","a":["had gone","'d gone"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"He ___ breakfast before he left home. (eat)","a":["had eaten","'d eaten"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"I ___ the news before you told me. (hear)","a":["had heard","'d heard"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"She ___ the window before the storm. (close)","a":["had closed","'d closed"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"We ___ the answer before the teacher explained it. (not know)","a":["hadn't known","had not known"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"They ___ the hotel before they travelled. (not book)","a":["hadn't booked","had not booked"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"___ you finished before eight? (have)","a":["Had"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"___ she ever seen snow before 2020? (have)","a":["Had"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"He had ___ home before dark. (come)","a":["come"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"We had ___ the wrong turning. (take)","a":["taken"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"The film had already ___ when I arrived. (begin)","a":["begun"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"She had ___ a letter before lunch. (write)","a":["written"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"He ___ the keys before we entered. (find)","a":["had found","'d found"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"fill","q":"I ___ the door before going out. (lock)","a":["had locked","'d locked"],"why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["The","train","had","left","before","we","arrived."],"a":"The train had left before we arrived.","th":"รถไฟออกไปก่อนที่เราจะมาถึง","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["She","had","already","eaten","when","I","called."],"a":"She had already eaten when I called.","th":"เธอกินไปแล้วตอนที่ฉันโทรไป","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["Had","you","finished","work","before","dinner?"],"a":"Had you finished work before dinner?","th":"คุณทำงานเสร็จก่อนอาหารเย็นหรือไม่","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["I","had","never","visited","Japan","before."],"a":"I had never visited Japan before.","th":"ก่อนหน้านั้นฉันไม่เคยไปญี่ปุ่น","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"},{"t":"order","words":["They","had","gone","home","by","midnight."],"a":"They had gone home by midnight.","th":"พวกเขากลับบ้านไปแล้วก่อนเที่ยงคืน","why":"Past Perfect ใช้ had + กริยาช่อง 3 สำหรับเหตุการณ์ที่เกิดก่อนเหตุการณ์หนึ่งในอดีต"}],"fu":[{"t":"mc","q":"The phone is ringing. I ___ get it!","o":["'ll","'m going to","'m getting"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Look at those black clouds! It ___ rain.","o":["will","is going to","is raining"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I think she ___ the exam easily. (pass)","a":["will pass","'ll pass"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"We ___ late, I promise. (not / be)","a":["won't be","will not be"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I've decided! I ___ a new phone next week.","o":["will buy","buy","am going to buy"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["I","am","going","to","visit","my","grandma","tomorrow."],"a":"I am going to visit my grandma tomorrow.","th":"พรุ่งนี้ฉันจะไปเยี่ยมคุณยาย","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Which sentence is correct?","o":["I will call you.","I will to call you.","I will calling you."],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"The doorbell is ringing. I ___ answer it!","o":["'m going to","will","am"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Look at that car! It ___ hit the wall.","o":["will to","going to","is going to"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I think our team ___ win tomorrow.","o":["will","is","going"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"We've already bought paint. We ___ paint the kitchen.","o":["will to","are going to","going"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I promise I ___ tell anyone.","o":["am not going","don't","won't"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Don't worry, I ___ carry your bag.","o":["will","will to","going"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Watch out! You ___ fall!","o":["will to","are going to","is going to"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I believe you ___ enjoy the concert.","o":["are","have","will"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"They've decided they ___ move next year.","o":["are going to","will to","going"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I ___ be late, I promise.","o":["don't","won't","am not"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"A: I'm cold. B: I ___ close the window.","o":["'m going to","going to","will"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"She is saving money because she ___ buy a car.","o":["is going to","will to","going"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"The weather forecast says it ___ rain tomorrow.","o":["will to","will","has"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"___ you help me with this box, please?","o":["Does","Are","Will"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"He ___ going to start a new course.","o":["is","will","does"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"We ___ not forget your birthday.","o":["are","will","do"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I have a plan: I ___ study abroad.","o":["will to","going","am going to"],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"I'm sure you'll ___ the test.","o":["pass","passing","to pass"],"a":0,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"My flight is booked; I ___ next Wednesday.","o":["will to fly","am flying","going fly"],"a":1,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"mc","q":"Which sentence expresses a promise?","o":["I called you last night.","I call every night.","I will call you tonight."],"a":2,"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I think it ___ tomorrow. (rain / will)","a":["will rain","'ll rain"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"She ___ you later, I promise. (call / will)","a":["will call","'ll call"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"We ___ on time, I promise. (be / will)","a":["will be","'ll be"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I ___ your secret. (not tell / will)","a":["won't tell","will not tell"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"They ___ the match, I think. (win / will)","a":["will win","'ll win"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I ___ you with your bags. (help / will)","a":["will help","'ll help"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"Look at the clouds! It ___. (rain / going to)","a":["is going to rain","'s going to rain"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I have decided: I ___ a new laptop. (buy / going to)","a":["am going to buy","'m going to buy"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"She ___ a doctor when she grows up. (be / going to)","a":["is going to be","'s going to be"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"We ___ dinner at home tonight. (cook / going to)","a":["are going to cook","'re going to cook"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"He ___ tomorrow. He has decided to rest. (not work / going to)","a":["isn't going to work","is not going to work"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I ___ this weekend. I already have a plan. (not travel / going to)","a":["am not going to travel","'m not going to travel"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"___ you going to join the club? (be)","a":["Are"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"___ she going to visit us? (be)","a":["Is"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"What ___ you going to do tomorrow? (be)","a":["are"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"We will ___ you when we arrive. (text)","a":["text"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"He is going to ___ dinner tonight. (make)","a":["make"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"fill","q":"I ___ send it now; I promise. (will)","a":["will"],"why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["I","will","help","you","with","dinner."],"a":"I will help you with dinner.","th":"ฉันจะช่วยคุณทำอาหารเย็น","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["She","is","going","to","visit","Bangkok."],"a":"She is going to visit Bangkok.","th":"เธอวางแผนจะไปกรุงเทพ","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["Will","you","call","me","tomorrow","morning?"],"a":"Will you call me tomorrow morning?","th":"พรุ่งนี้เช้าคุณจะโทรหาฉันไหม","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["We","are","not","going","to","drive."],"a":"We are not going to drive.","th":"เราไม่ได้วางแผนจะขับรถ","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"},{"t":"order","words":["I","think","it","will","rain","tonight."],"a":"I think it will rain tonight.","th":"ฉันคิดว่าคืนนี้ฝนจะตก","why":"will + กริยาช่อง 1 ใช้กับคำสัญญา การตัดสินใจทันทีและความคิดเห็น ส่วน be going to ใช้กับแผนหรือหลักฐาน"}],"c1":[{"t":"mc","q":"If it ___ tomorrow, we'll stay at home.","o":["rains","will rain","rained"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If you ___ hard, you'll pass the exam.","o":["will study","study","studied"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If I ___ him, I'll tell him. (see)","a":["see"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"She ___ angry if you forget her birthday. (be)","a":["will be","'ll be"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"___ you hurry, you'll miss the bus.","o":["If","When","Unless"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["If","it","rains,","we","will","stay","home."],"a":"If it rains, we will stay home.","th":"ถ้าฝนตก เราจะอยู่บ้าน","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"Which sentence is correct?","o":["If it is sunny, we'll go out.","If it will be sunny, we'll go out.","If it was sunny, we'll go out."],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If you heat the soup now, it ___ ready soon.","o":["be","will be","is will"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If she ___ late, we'll start without her.","o":["will arrive","arrived","arrives"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"You will feel better if you ___ some rest.","o":["get","will get","got"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If it ___ sunny tomorrow, we'll go hiking.","o":["will be","is","was"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"Unless you ___ now, you'll miss the train.","o":["will leave","left","leave"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If Tom calls, I ___ him the message.","o":["will give","give will","gave"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"We'll cancel the picnic if it ___.","o":["will rain","rains","rained"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If you don't eat, you ___ hungry.","o":["will to be","are will","will be"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If she ___ hard, she'll pass the exam.","o":["studies","will study","study"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"I will call you when I ___ home.","o":["will get","get","got"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"Unless he apologises, she ___ forgive him.","o":["doesn't will","isn't will","won't"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If we ___ now, we will arrive early.","o":["start","will start","started"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"I'll buy the tickets if they ___ cheap.","o":["will be","are","were"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If you ask politely, they ___ help you.","o":["are","do will","will"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"Unless it ___ soon, the plants will die.","o":["rains","will rain","rained"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"She will be happy if you ___ her.","o":["will visit","visit","visited"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If you ___ the instructions, you won't get lost.","o":["will follow","followed","follow"],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"He ___ miss his flight if he leaves now.","o":["won't","doesn't will","isn't"],"a":0,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"If I see John, I ___ hello.","o":["say will","will say","said"],"a":1,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"mc","q":"Which sentence is a correct First Conditional?","o":["If it will rain, I'll stay home.","If it rained, I'll stay home.","If it rains, I'll stay home."],"a":2,"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If we ___ early, we'll catch the bus. (leave)","a":["leave"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If she ___ late, I'll call her. (be)","a":["is"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If he ___ every day, he'll improve. (practise)","a":["practises"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If it ___ tomorrow, we'll stay inside. (snow)","a":["snows"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If you ___ harder, you'll pass. (study)","a":["study"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"I ___ dinner if you are hungry. (cook / will)","a":["will cook","'ll cook"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"They ___ if they miss the bus. (walk / will)","a":["will walk","'ll walk"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"She ___ happy if you help her. (be / will)","a":["will be","'ll be"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"We ___ the trip if it storms. (cancel / will)","a":["will cancel","'ll cancel"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"He ___ unless he hurries. (be late / will)","a":["will be late","'ll be late"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If it ___, the ground will be wet. (rain)","a":["rains"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"Unless she ___, she won't understand. (ask)","a":["asks"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If I ___ enough money, I'll buy it. (save)","a":["save"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"You ___ the answer if you read carefully. (find / will)","a":["will find","'ll find"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"I'll text you when I ___ home. (arrive)","a":["arrive"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If we ___ together, we'll finish faster. (work)","a":["work"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"He won't pass unless he ___. (study)","a":["studies"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"fill","q":"If you ___ the door, the room will be quieter. (close)","a":["close"],"why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["If","it","rains","we","will","stay","home."],"a":"If it rains we will stay home.","th":"ถ้าฝนตก เราจะอยู่บ้าน","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["She","will","call","if","she","needs","help."],"a":"She will call if she needs help.","th":"เธอจะโทรมาถ้าต้องการความช่วยเหลือ","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["Unless","you","hurry","you","will","be","late."],"a":"Unless you hurry you will be late.","th":"ถ้าไม่รีบคุณจะสาย","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["If","I","see","him","I","will","ask."],"a":"If I see him I will ask.","th":"ถ้าฉันเจอเขาฉันจะถาม","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"},{"t":"order","words":["We","will","go","if","the","weather","improves."],"a":"We will go if the weather improves.","th":"เราจะไปถ้าอากาศดีขึ้น","why":"First Conditional ใช้ if/unless + Present Simple และ will + กริยาช่อง 1 ในผลลัพธ์; หลัง when ที่บอกอนาคตใช้ Present Simple"}]}};
+const $=(sel,root=document)=>root.querySelector(sel);
+const esc=x=>String(x).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const norm=x=>String(x||'').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[.!?]$/,'');
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+const colors={present:'#087b8a',past:'#c46b12',future:'#6650ca'};
+const order=['present','past','future'];
+const groupLabels={present:'PRESENT LINE · สายปัจจุบัน',past:'PAST LINE · สายอดีต',future:'FUTURE LINE · สายอนาคต'};
+const units=DB.units,byid=Object.fromEntries(units.map(u=>[u.id,u]));
+let progress={xp:0,streak:0,last:'',units:{}};
+const storageKey='tenseTales.offline.v1';
+try{let prev=JSON.parse(localStorage.getItem(storageKey));if(prev&&typeof prev==='object')progress=Object.assign(progress,prev);}catch{}
+function save(){try{localStorage.setItem(storageKey,JSON.stringify(progress));}catch{}}
+const dstr=d=>`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+function touch(){const today=dstr(new Date());if(progress.last===today)return;const d=new Date();d.setDate(d.getDate()-1);progress.streak=progress.last===dstr(d)?progress.streak+1:1;progress.last=today;}
+function stats(){ $('#xp').textContent=`${progress.xp} XP`;const d=new Date();d.setDate(d.getDate()-1);const active=progress.last===dstr(new Date())||progress.last===dstr(d);$('#streak').textContent=`${active?progress.streak:0} วันติด`;}
+const best=id=>progress.units[id]?.best;
+const stars=id=>best(id)==null?0:best(id)>=90?3:best(id)>=70?2:best(id)>0?1:0;
+let current='home',unitId='ps',tab='story',quiz=null;
+function listen(root=document){root.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.view)));}
+function nav(next){current=next;const root=$('#app');document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active',b.dataset.view===(next==='lesson'||next==='quiz'&&quiz?.unit?'home':next==='result'&&quiz?.unit?'home':next)));
+ if(next==='home')home();else if(next==='lesson')lesson();else if(next==='timeline')timeline();else if(next==='challenge')challenge();else if(next==='quiz')renderQuiz();else if(next==='result')result();stats();window.scrollTo(0,0);}
+function home(){const rails=order.map(line=>`<section class="rail ${line}"><div class="rail-title">${groupLabels[line]}</div>${units.filter(u=>u.line===line).map(u=>`<button class="station" data-unit="${u.id}"><small>${u.code} · ${u.count} QUESTIONS</small><h3>${esc(u.title)}</h3><p>${esc(u.th)} · ${esc(u.tag)}</p><div class="station-foot"><span class="stars" aria-label="${stars(u.id)} ดาว">${[1,2,3].map(i=>i<=stars(u.id)?'★':'<span class="empty">★</span>').join('')}</span><span class="pill">${best(u.id)==null?'เริ่มเรียน':`ดีที่สุด ${best(u.id)}%`}</span></div></button>`).join('')}</section>`).join('');
+ $('#app').innerHTML=`<div class="hero"><span class="eyebrow">ENGLISH B1 · OFFLINE EDITION</span><h1>เข้าใจ Tense ด้วยเรื่องสั้นและแบบฝึกหัด</h1><p>เรียนผ่านบทสนทนา กฎ ไทม์ไลน์ และแบบฝึกหัดภาษาอังกฤษพร้อมเฉลยภาษาไทย ใช้งานได้โดยไม่ต้องเชื่อมต่ออินเทอร์เน็ต</p><div class="intro-pills"><span class="pill">8 บทเรียน</span><span class="pill">400 ข้อทั้งหมด</span><span class="pill">3 รูปแบบโจทย์</span><span class="pill">คะแนนและดาว</span></div></div><div class="metro">${rails}</div>`;
+ $('#app').querySelectorAll('[data-unit]').forEach(b=>b.addEventListener('click',()=>{unitId=b.dataset.unit;tab='story';nav('lesson');}));}
+function heading(u){return `<button class="back" id="returnHome">← กลับแผนที่บทเรียน</button><div class="heading ${u.line}"><span class="eyebrow">${u.code} · ${esc(groupLabels[u.line])}</span><h1>${esc(u.title)}</h1><p>${esc(u.th)} · ${esc(u.tag)}</p></div>`;}
+function lesson(){const u=byid[unitId];let panel='';if(tab==='story')panel=`<div class="card"><h2>เรื่องสั้น · บทสนทนาตัวอย่าง</h2><p class="muted small">บทสนทนาภาษาอังกฤษพร้อมคำแปลไทย</p><div class="chat">${u.dialogue.map(([who,en,th])=>`<div class="message"><div class="avatar ${who==='Mai'?'mai':''}">${who[0]}</div><div class="bubble"><small>${esc(who)}</small><div>${esc(en)}</div><div class="translation">${esc(th)}</div></div></div>`).join('')}</div></div>`;
+ else if(tab==='rules')panel=`<div class="card"><h2>รูปประโยค</h2><div class="ruleline">${esc(u.formula)}</div></div><div class="card"><h2>ใช้เมื่อไร</h2><ul class="rule-bullets">${u.uses.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div class="card"><h2>Signal Words</h2><div class="tags">${u.signals.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card"><h2>ตัวอย่าง</h2><div class="line-example"><strong>${esc(u.example)}</strong><div class="muted small">${esc(u.meaning)}</div></div><p style="margin-top:18px"><span class="incorrect">ข้อผิดที่พบบ่อย:</span> ${esc(u.mistake)}</p></div>`;
+ else if(tab==='time')panel=`<div class="card"><h2>${esc(u.title)} บนเส้นเวลา</h2>${timelineDiagram(u)}<p><strong>${esc(u.example)}</strong><span class="muted"> — ${esc(u.meaning)}</span></p><div class="ruleline">${esc(u.formula)}</div></div>`;
+ else panel=`<div class="card exercise-intro"><span class="eyebrow">PRACTICE</span><h2>ฝึกทำโจทย์ 50 ข้อ</h2><p>โจทย์ไม่ซ้ำกัน 50 ข้อต่อบท มีแบบเลือกคำตอบ เติมคำ และเรียงประโยค คำตอบที่ผิดจะวนมาทบทวนอีกหนึ่งครั้ง</p><div class="best">${best(u.id)==null?'ยังไม่เคยทำแบบฝึกหัดบทนี้':`คะแนนที่ดีที่สุด ${best(u.id)}%`}</div><div class="row"><button id="start" class="btn">เริ่มทำ 50 ข้อ →</button></div></div>`;
+ $('#app').innerHTML=heading(u)+`<div class="tabs">${[['story','เรื่องสั้น'],['rules','กฎและการใช้'],['time','ไทม์ไลน์'],['practice','ฝึกทำโจทย์']].map(([v,label])=>`<button class="tab ${tab===v?'active':''}" data-tab="${v}">${label}</button>`).join('')}</div><div class="panels">${panel}</div>`;
+ $('#returnHome').addEventListener('click',()=>nav('home'));$('#app').querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;lesson();}));const go=$('#start');if(go)go.addEventListener('click',()=>startQuiz(u.id,50));}
+function timelineDiagram(u){const position={ps:50,pc:50,pa:24,pco:30,pp:43,ppf:20,fu:76,c1:72}[u.id];const cls=u.line==='present'?'present':u.line==='future'?'future':'';return `<div class="timeline" role="img" aria-label="เส้นเวลา: ${esc(u.title)}"><div class="timeline-bg"><i></i><i></i></div><div class="time-marks"><span>PAST</span><span>NOW</span><span>FUTURE</span></div><div class="axis"></div><div class="moment ${cls}" style="--time-pos:${position}%"></div><div class="time-caption">${esc(u.tag)}</div></div>`;}
+const guesses=[['I usually take the bus to work.','ps'],['Look! The baby is sleeping.','pc'],['We visited a museum last Sunday.','pa'],['I was walking when it started to rain.','pco'],['She has lived here since 2018.','pp'],['When I got there, they had already eaten.','ppf'],["I'm going to start a new job.",'fu'],['If you study, you will pass.','c1']];
+let currentGuess=0,guessPicked=null,guessScore=0,guessOrder=shuffle(guesses);
+function timeline(){const u=byid[unitId];$('#app').innerHTML=`<div class="hero"><span class="eyebrow">TIMELINE EXPLORER</span><h1>ไทม์ไลน์ของ Tense</h1><p>เลือกบทเรียนเพื่อดูเส้นเวลา หรือฝึกทาย Tense จากประโยคตัวอย่าง</p></div><div class="tags">${units.map(x=>`<button class="tab ${x.id===unitId?'active':''}" data-choose="${x.id}">${esc(x.title)}</button>`).join('')}</div><div class="panels" style="margin-top:17px"><div class="card"><h2>${esc(u.title)}</h2>${timelineDiagram(u)}<p>${esc(u.example)}</p><div class="ruleline">${esc(u.formula)}</div><button class="btn secondary" id="openLesson" style="margin-top:12px">เปิดบทเรียน</button></div><div class="card" id="guess"></div></div>`;
+ $('#app').querySelectorAll('[data-choose]').forEach(b=>b.addEventListener('click',()=>{unitId=b.dataset.choose;timeline();}));$('#openLesson').addEventListener('click',()=>{tab='story';nav('lesson');});renderGuess();}
+function renderGuess(){const g=$('#guess');if(currentGuess>=guessOrder.length){g.innerHTML=`<h2>จบเกมทาย</h2><p>ทายถูก ${guessScore} จาก ${guessOrder.length} ข้อ</p><button class="btn" id="guessAgain">เล่นอีกครั้ง</button>`;$('#guessAgain').addEventListener('click',()=>{currentGuess=0;guessScore=0;guessOrder=shuffle(guesses);guessPicked=null;renderGuess();});return;}
+ const [sentence,answer]=guessOrder[currentGuess];g.innerHTML=`<span class="eyebrow">ทายชื่อ Tense · ${currentGuess+1}/${guessOrder.length}</span><h2 style="margin-top:8px">${esc(sentence)}</h2><div class="choices">${units.map(u=>`<button class="tab" data-guess="${u.id}" ${guessPicked?'disabled':''}>${esc(u.title)}</button>`).join('')}</div>${guessPicked?`<div class="feedback ${guessPicked===answer?'':'no'}" style="margin:13px 0"><strong>${guessPicked===answer?'ถูกต้อง!':'ยังไม่ถูก'}</strong><p>คำตอบ: ${esc(byid[answer].title)}</p></div><button class="btn" id="guessNext">ข้อต่อไป</button>`:''}`;
+ g.querySelectorAll('[data-guess]').forEach(b=>b.addEventListener('click',()=>{guessPicked=b.dataset.guess;if(guessPicked===answer){guessScore++;progress.xp+=5;touch();save();stats();}renderGuess();}));const next=$('#guessNext');if(next)next.addEventListener('click',()=>{currentGuess++;guessPicked=null;renderGuess();});}
+function challenge(){$('#app').innerHTML=`<div class="hero"><span class="eyebrow">MIXED CHALLENGE</span><h1>ชาเลนจ์รวม Tense</h1><p>สุ่มโจทย์จากทั้ง 8 บท เลือกจำนวนข้อเพื่อฝึกการใช้ Tense ให้คล่องโดยไม่เห็นชื่อบทเรียน</p></div><div class="card"><h2>เลือกระดับชาเลนจ์</h2><p class="muted">แต่ละรอบสุ่มจากคลังโจทย์ทั้งหมด 400 ข้อ</p><div class="choices">${[10,25,50].map(n=>`<button class="btn" data-count="${n}">เริ่ม ${n} ข้อ</button>`).join('')}</div></div>`;$('#app').querySelectorAll('[data-count]').forEach(b=>b.addEventListener('click',()=>startQuiz(null,+b.dataset.count)));}
+function startQuiz(id,count){const items=id?DB.questions[id].map((e,i)=>({u:id,e,i})):units.flatMap(u=>DB.questions[u.id].map((e,i)=>({u:u.id,e,i})));const selected=shuffle(items).slice(0,count);quiz={unit:id,count,items:selected.slice(),source:selected.slice(),answered:new Set(),firstCorrect:0,miss:{},feedback:null,sel:null,typed:'',built:[],bank:null,done:0};nav('quiz');}
+function quizTitle(){return quiz.unit?byid[quiz.unit].title:'ชาเลนจ์รวม';}
+function renderQuiz(){if(!quiz||!quiz.items.length){nav('result');return;}const r=quiz,item=r.items[0],e=item.e,review=r.answered.has(`${item.u}:${item.i}`),feedback=r.feedback!==null;const kind={mc:'เลือกคำตอบ',fill:'เติมคำ',order:'เรียงประโยค'}[e.t];if(e.t==='order'&&!r.bank)r.bank=shuffle(e.words.map((w,i)=>({w,i})));
+ let controls='';if(e.t==='mc')controls=`<div class="options">${e.o.map((choice,i)=>`<button class="btn choice ${feedback?(i===e.a?'correct':r.sel===i?'incorrect':''):(r.sel===i?'selected':'')}" data-opt="${i}" ${feedback?'disabled':''}>${esc(choice)}</button>`).join('')}</div>`;
+ if(e.t==='fill')controls=`<input class="answerbox" id="typed" value="${esc(r.typed)}" placeholder="พิมพ์คำตอบภาษาอังกฤษ" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ${feedback?'disabled':''}/>`;
+ if(e.t==='order'){const picked=new Set(r.built);controls=`${e.th?`<p class="muted">${esc(e.th)}</p>`:''}<div class="word-zone">${r.built.map(i=>`<button class="btn word" data-rm="${i}" ${feedback?'disabled':''}>${esc(e.words[i])}</button>`).join('')}</div><div class="word-bank">${r.bank.map(({w,i})=>`<button class="btn word ${picked.has(i)?'used':''}" data-add="${i}" ${feedback?'disabled':''}>${esc(w)}</button>`).join('')}</div>`;}
+ const answer=e.t==='mc'?e.o[e.a]:Array.isArray(e.a)?e.a[0]:e.a;const fb=feedback?`<div class="feedback ${r.feedback.ok?'':'no'}"><strong>${r.feedback.ok?'ถูกต้อง!':'ยังไม่ถูก'}</strong>${r.feedback.ok?'':`<p><strong style="display:inline">คำตอบที่ถูก: </strong>${esc(answer)}</p>`}<p>${esc(e.why)}</p></div>`:'';
+ const question=e.t==='order'?'เรียงคำให้เป็นประโยคภาษาอังกฤษที่ถูกต้อง':esc(e.q).replace('___','<span class="gap" aria-label="ช่องว่าง"></span>');
+ $('#app').innerHTML=`<div class="quiz"><div class="quiz-top"><button class="back" id="quit">← ออกจากแบบฝึกหัด</button><span class="pill">${esc(quizTitle())}</span></div><div class="quiz-progress"><div style="width:${r.done/r.count*100}%"></div></div><div class="row" style="justify-content:space-between"><span class="question-kind">${kind} ${review?'· ทบทวนข้อที่พลาด':''}</span><span class="pill">${r.done} / ${r.count} ข้อแล้ว</span></div><div class="question-text">${question}</div>${controls}${fb}<div class="row"><button class="btn" id="action" ${feedback?'': 'disabled'}>${feedback?'ต่อไป →':'ตรวจคำตอบ'}</button></div></div>`;
+ $('#quit').addEventListener('click',()=>{if(r.unit){unitId=r.unit;tab='practice';nav('lesson');}else nav('challenge');});
+ $('#app').querySelectorAll('[data-opt]').forEach(b=>b.addEventListener('click',()=>{r.sel=+b.dataset.opt;renderQuiz();}));
+ $('#app').querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.add;if(!r.built.includes(i)){r.built.push(i);renderQuiz();}}));
+ $('#app').querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',()=>{r.built.splice(r.built.indexOf(+b.dataset.rm),1);renderQuiz();}));
+ const inp=$('#typed');if(inp&&!feedback){inp.focus();inp.addEventListener('input',()=>{r.typed=inp.value;$('#action').disabled=!canCheck();});inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();act();}});}
+ $('#action').disabled=!feedback&&!canCheck();$('#action').addEventListener('click',act);
 }
-
-/* ───────── Progress (per-viewer convenience) ───────── */
-const KEY = 'tenseTales.v1';
-let P = { xp: 0, streak: 0, last: '', units: {} };
-try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') P = Object.assign(P, s); } catch (e) {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} };
-const dayStr = (d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-function touchStreak() {
-  const today = dayStr(new Date());
-  if (P.last === today) return;
-  const y = new Date(); y.setDate(y.getDate() - 1);
-  P.streak = P.last === dayStr(y) ? P.streak + 1 : 1;
-  P.last = today;
-}
-function paintStats() {
-  $('#xp').textContent = `${P.xp} XP`;
-  const alive = P.last && (P.last === dayStr(new Date()) || (() => { const y = new Date(); y.setDate(y.getDate() - 1); return P.last === dayStr(y); })());
-  $('#streak').textContent = `${alive ? P.streak : 0} วันติด`;
-}
-const starsFor = (id) => { const b = (P.units[id] || {}).best; return b == null ? 0 : b >= 90 ? 3 : b >= 70 ? 2 : b >= 1 ? 1 : 0; };
-
-/* ───────── Views ───────── */
-const main = $('#main');
-let view = { v: 'home' };
-let showTh = false;
-
-function nav(v, extra = {}) {
-  view = Object.assign({ v }, extra);
-  document.querySelectorAll('.nav button').forEach((b) => {
-    if (b.dataset.v === v || (v === 'unit' && b.dataset.v === 'home')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
-  });
-  window.scrollTo({ top: 0 });
-  ({ home: renderHome, unit: renderUnit, timeline: renderTimeline, challenge: renderChallenge, run: renderRun, result: renderResult })[v]();
-  paintStats();
-}
-
-function renderHome() {
-  const rails = ['present', 'past', 'future'].map((ln) => {
-    const items = UNITS.filter((u) => u.line === ln).map((u) => {
-      const s = starsFor(u.id);
-      return `<button class="station${u.hub ? ' hub' : ''}" data-unit="${u.id}">
-        <span class="code">${u.code}</span><h3>${esc(u.title)}</h3><p>${esc(u.th)} · ${esc(u.tag)}</p>
-        ${u.hub ? '<span class="hubnote">สถานีเปลี่ยนสาย: เชื่อมอดีตเข้ากับปัจจุบัน</span>' : ''}
-        <span class="stars" aria-label="${s} ดาว">${[1, 2, 3].map((i) => `<i class="${i <= s ? 'on' : ''}">★</i>`).join('')}</span></button>`;
-    }).join('');
-    return `<section class="rail ${ln}"><div class="rail-h"><span class="badge">${LINES[ln].badge}</span><b>${LINES[ln].th}</b></div>${items}</section>`;
-  }).join('');
-  main.innerHTML = `<div class="intro"><h1>เข้าใจ tense ด้วยเรื่องสั้น</h1>
-    <p>ระดับ B1 · 8 สถานี อ่านเรื่องสั้น ดูกฎ ดูตำแหน่งบนไทม์ไลน์ แล้วฝึกทำโจทย์ ได้ดาวเมื่อทำถูกตั้งแต่ครั้งแรก</p></div>
-    <div class="map">${rails}</div>`;
-  main.querySelectorAll('[data-unit]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: b.dataset.unit, tab: 'story' })));
-}
-
-function renderUnit() {
-  const u = BYID[view.id], tab = view.tab || 'story';
-  const tabs = [['story', 'เรื่องสั้น'], ['rules', 'กฎและการใช้'], ['time', 'ไทม์ไลน์'], ['practice', 'ฝึกทำโจทย์']];
-  let panel = '';
-  if (tab === 'story') {
-    panel = `<div class="card"><div class="tools"><h2>${esc(u.story.title)}</h2>
-      <span class="sw"><span>แสดงคำแปลไทย</span><button id="thsw" aria-pressed="${showTh}" aria-label="แสดงคำแปลไทย"></button></span></div>
-      <p class="muted" style="margin:0 0 12px">คำที่ไฮไลต์คือ tense ของบทนี้ แตะที่ประโยคเพื่อดูคำแปล</p>
-      <div class="chat ${showTh ? 'show-th' : ''}" id="chat">${u.story.lines.map(([who, en, th]) =>
-        `<div class="msg"><div class="av ${who === 'Mai' ? 'b' : ''}">${who[0]}</div><button class="bubble" aria-label="แสดงคำแปล"><div class="en">${hl(en)}</div><div class="th">${esc(th)}</div></button></div>`).join('')}</div></div>`;
-  } else if (tab === 'rules') {
-    const r = u.rules;
-    panel = `<div class="card"><h2>รูปประโยค</h2><div class="scroll"><table class="form"><tbody>${r.form.map((f) =>
-      `<tr><td class="sign">${esc(f[0])}</td><td>${f[1]}</td><td>${f[2]}</td></tr>`).join('')}</tbody></table></div></div>
-      <div class="card"><h2>ใช้เมื่อไร</h2>${r.uses.map((x) => `<div class="use"><b>${esc(x[0])}</b><div class="ex">${esc(x[1])}</div></div>`).join('')}</div>
-      <div class="card"><h2>คำสัญญาณ</h2><div class="chips">${r.signals.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div></div>
-      ${r.irr ? `<div class="card"><h2>กริยาไม่ปกติที่ควรจำ</h2><div class="irr">${r.irr.map((s) => `<span>${esc(s)}</span>`).join('')}</div></div>` : ''}
-      <div class="card"><h2>ข้อผิดที่เจอบ่อย</h2>${r.mistakes.map((m) => `<div class="mist"><div class="bad">${esc(m[0])}</div><div class="good">${esc(m[1])}</div><div class="muted">${esc(m[2])}</div></div>`).join('')}</div>
-      <div class="tip">💡 ${esc(r.tip)}</div>`;
-  } else if (tab === 'time') {
-    panel = `<div class="card tlbox ${u.line}"><h2>${esc(u.title)} อยู่ตรงไหนของเวลา</h2>${timeline(u.tl)}
-      <p class="muted" style="margin:10px 0 0">เส้นประคือ "ตอนนี้" ฝั่งซ้ายคืออดีต ฝั่งขวาคืออนาคต</p></div>`;
-  } else {
-    const best = (P.units[u.id] || {}).best;
-    panel = `<div class="card"><h2>ฝึกทำโจทย์ ${u.ex.length} ข้อ</h2>
-      <p class="muted">เลือกคำตอบ พิมพ์คำตอบ หรือเรียงคำ ข้อที่ผิดจะวนมาให้ทำซ้ำอีกครั้ง คะแนนนับเฉพาะข้อที่ถูกตั้งแต่ครั้งแรก${best != null ? `<br>คะแนนดีที่สุดของคุณ: <b>${best}%</b>` : ''}</p>
-      <button class="btn" id="go">เริ่มเลย</button></div>`;
-  }
-  main.innerHTML = `<button class="back" id="back">← กลับแผนที่</button>
-    <div class="uhead ${u.line}"><span class="code mono">${u.code} · ${LINES[u.line].badge}</span><h1>${esc(u.title)}</h1><p>${esc(u.th)} · ${esc(u.tag)}</p></div>
-    <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${l}</button>`).join('')}</div>
-    <div class="panel" style="--c: var(--${u.line})">${panel}</div>`;
-  $('#back').addEventListener('click', () => nav('home'));
-  main.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: u.id, tab: b.dataset.tab })));
-  const sw = $('#thsw');
-  if (sw) sw.addEventListener('click', () => { showTh = !showTh; sw.setAttribute('aria-pressed', showTh); $('#chat').classList.toggle('show-th', showTh); });
-  main.querySelectorAll('.bubble').forEach((b) => b.addEventListener('click', () => b.classList.toggle('open')));
-  const go = $('#go');
-  if (go) go.addEventListener('click', () => startRun({ title: u.title, line: u.line, unit: u.id, list: u.ex.map((e) => ({ e, u: u.id })) }));
-}
-
-/* Timeline explorer + which-tense game */
-let gstate = { i: 0, order: shuffle(GUESS.map((_, i) => i)), score: 0, done: 0, picked: null };
-function renderTimeline() {
-  const sel = view.sel || 'ps';
-  const u = BYID[sel];
-  main.innerHTML = `<div class="intro"><h1>ไทม์ไลน์ของ tense</h1><p>เลือก tense เพื่อดูว่ามันอยู่ตรงไหนของเวลา แล้วลองเกมทายด้านล่าง</p></div>
-    <div class="panel">
-    <div class="tchips">${UNITS.map((x) => `<button class="tchip ${x.line}" aria-pressed="${x.id === sel}" data-sel="${x.id}">${esc(x.title)}</button>`).join('')}</div>
-    <div class="card tlbox ${u.line}" style="--c: var(--${u.line})"><h2>${esc(u.title)} <span class="muted" style="font-size:15px;font-weight:500">${esc(u.th)}</span></h2>${timeline(u.tl)}
-      <div class="formula" style="margin-top:10px">${u.rules.form[0][1]}${u.rules.form[0][2] ? ' ' + (u.rules.form[0][2].length < 40 ? '· ' + u.rules.form[0][2] : '') : ''}</div>
-      <p style="margin:10px 0 0" class="ex">${esc(u.rules.uses[0][1])}</p>
-      <div class="row" style="margin-top:12px"><button class="btn ghost" id="openu">เปิดบทเรียน ${u.code}</button></div></div>
-    <div class="card guess" id="guess"></div></div>`;
-  main.querySelectorAll('[data-sel]').forEach((b) => b.addEventListener('click', () => nav('timeline', { sel: b.dataset.sel })));
-  $('#openu').addEventListener('click', () => nav('unit', { id: u.id, tab: 'story' }));
-  renderGuess();
-}
-function renderGuess() {
-  const g = gstate, box = $('#guess');
-  if (g.i >= g.order.length) {
-    box.innerHTML = `<h2>จบเกมทาย</h2><p>ทายถูก <b>${g.score}</b> จาก ${g.order.length} ข้อ</p><button class="btn" id="again">เล่นอีกรอบ</button>`;
-    $('#again').addEventListener('click', () => { gstate = { i: 0, order: shuffle(GUESS.map((_, i) => i)), score: 0, done: 0, picked: null }; renderGuess(); });
-    return;
-  }
-  const [s, ans, why] = GUESS[g.order[g.i]];
-  const au = BYID[ans];
-  box.innerHTML = `<div class="qh">ประโยคนี้ใช้ tense อะไร · ข้อ ${g.i + 1}/${g.order.length}</div><div class="sent" style="margin:8px 0 14px">${esc(s)}</div>
-    <div class="tchips">${UNITS.map((x) => {
-      let st = '';
-      if (g.picked) st = x.id === ans ? 'right' : x.id === g.picked ? 'wrong' : '';
-      return `<button class="tchip ${x.line}" data-g="${x.id}" ${g.picked ? 'disabled' : ''} style="${st === 'right' ? 'background:var(--ok-bg);border-color:var(--ok)' : st === 'wrong' ? 'background:var(--bad-bg);border-color:var(--bad)' : ''}">${esc(x.title)}</button>`;
-    }).join('')}</div>
-    ${g.picked ? `<div class="fb ${g.picked === ans ? 'ok' : 'no'}" style="margin-top:14px" aria-live="polite"><b>${g.picked === ans ? 'ถูกต้อง!' : 'ยังไม่ใช่'}</b>
-      <div class="ans-line">${esc(au.title)}</div><div>${esc(why)}</div></div>
-      <div class="card tlbox ${au.line}" style="margin-top:12px;--c:var(--${au.line})">${timeline(au.tl)}</div>
-      <div class="row" style="margin-top:12px"><button class="btn" id="nx">ข้อต่อไป</button></div>` : ''}`;
-  box.querySelectorAll('[data-g]').forEach((b) => b.addEventListener('click', () => {
-    g.picked = b.dataset.g; if (g.picked === ans) { g.score++; P.xp += 5; touchStreak(); save(); paintStats(); } renderGuess();
-  }));
-  const nx = $('#nx'); if (nx) nx.addEventListener('click', () => { g.i++; g.picked = null; renderGuess(); });
-}
-
-/* Challenge */
-function renderChallenge() {
-  const done = UNITS.filter((u) => starsFor(u.id) > 0).length;
-  main.innerHTML = `<div class="intro"><h1>ชาเลนจ์รวม tense</h1><p>สุ่มโจทย์ 10 ข้อจากทุกสถานี ต้องเลือก tense ให้ถูกเองโดยไม่มีบทเรียนบอกใบ้ เหมาะสำหรับทบทวนหลังเรียนหลายบท</p></div>
-    <div class="card"><p style="margin-top:0">ผ่านมาแล้ว ${done} จาก ${UNITS.length} สถานี</p><div class="row"><button class="btn" id="go">เริ่มชาเลนจ์ 10 ข้อ</button></div></div>`;
-  $('#go').addEventListener('click', () => {
-    const all = UNITS.flatMap((u) => u.ex.map((e) => ({ e, u: u.id })));
-    startRun({ title: 'ชาเลนจ์รวม', line: 'present', unit: null, list: shuffle(all).slice(0, 10) });
-  });
-}
-
-/* Runner */
-let run = null;
-function startRun(cfg) {
-  run = { cfg, queue: cfg.list.slice(), total: cfg.list.length, i: 0, first: 0, miss: {}, seen: new Set(), phase: 'ask', sel: null, built: [], bank: null, retry: new Set() };
-  nav('run');
-}
-function renderRun() {
-  const r = run, item = r.queue[0];
-  if (!item) { finishRun(); return; }
-  const e = item.e;
-  const line = r.cfg.unit ? BYID[r.cfg.unit].line : BYID[item.u].line;
-  if (e.t === 'order' && !r.bank) r.bank = shuffle(e.words.map((w, i) => ({ w, i })));
-  const q = e.t === 'order' ? 'เรียงคำให้เป็นประโยคที่ถูกต้อง' : esc(e.q).replace('___', '<span class="gap">&nbsp;&nbsp;&nbsp;</span>');
-  const fin = r.phase === 'fb';
-  let body = '';
-  if (e.t === 'mc') {
-    body = `<div class="opts">${e.o.map((o, i) => {
-      let c = ''; if (fin) c = i === e.a ? 'right' : i === r.sel ? 'wrong' : '';
-      return `<button class="opt ${c}" data-i="${i}" aria-pressed="${!fin && r.sel === i}" ${fin ? 'disabled' : ''}>${esc(o)}</button>`;
-    }).join('')}</div>`;
-  } else if (e.t === 'fill') {
-    body = `<input class="ans" id="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="พิมพ์คำตอบ" ${fin ? 'disabled' : ''} value="${fin ? esc(r.typed || '') : ''}">`;
-  } else {
-    const used = new Set(r.built);
-    body = `${e.th ? `<p class="muted" style="margin:0">${esc(e.th)}</p>` : ''}<div class="built" id="built">${r.built.map((id) => `<button class="tile" data-rm="${id}" ${fin ? 'disabled' : ''}>${esc(e.words[id])}</button>`).join('')}</div>
-      <div class="bank">${r.bank.map((t) => `<button class="tile ${used.has(t.i) ? 'used' : ''}" data-add="${t.i}" ${fin ? 'disabled' : ''}>${esc(t.w)}</button>`).join('')}</div>`;
-  }
-  let fb = '';
-  if (fin) {
-    const ok = r.lastOk;
-    const ans = e.t === 'mc' ? e.o[e.a] : e.t === 'fill' ? e.a[0] : e.a;
-    fb = `<div class="fb ${ok ? 'ok' : 'no'}" aria-live="polite"><b>${ok ? 'ถูกต้อง!' : 'ยังไม่ถูก'}</b>${ok ? '' : `<div class="ans-line">คำตอบ: ${esc(ans)}</div>`}<div>${esc(e.why)}</div></div>`;
-  }
-  main.innerHTML = `<div class="runner" style="--c: var(--${line})">
-    <div class="row" style="justify-content:space-between"><button class="back" id="quit">← ออก</button><span class="mono muted">${esc(r.cfg.title)}</span></div>
-    <div class="prog" aria-hidden="true">${Array.from({ length: r.total }, (_, k) => `<i class="${k < r.i ? 'done' : k === r.i ? 'cur' : ''}"></i>`).join('')}</div>
-    <div class="qh">${e.t === 'mc' ? 'เลือกคำตอบ' : e.t === 'fill' ? 'เติมคำ' : 'เรียงประโยค'} · ข้อ ${Math.min(r.i + 1, r.total)}/${r.total}</div>
-    <div class="q">${q}</div>${body}${fb}
-    <div class="row"><button class="btn" id="act" ${!fin && !canCheck() ? 'disabled' : ''}>${fin ? 'ต่อไป' : 'ตรวจคำตอบ'}</button></div></div>`;
-  $('#quit').addEventListener('click', () => nav(r.cfg.unit ? 'unit' : 'challenge', r.cfg.unit ? { id: r.cfg.unit, tab: 'practice' } : {}));
-  main.querySelectorAll('[data-i]').forEach((b) => b.addEventListener('click', () => { r.sel = +b.dataset.i; renderRun(); }));
-  main.querySelectorAll('[data-add]').forEach((b) => b.addEventListener('click', () => { r.built.push(+b.dataset.add); renderRun(); }));
-  main.querySelectorAll('[data-rm]').forEach((b) => b.addEventListener('click', () => { r.built.splice(r.built.indexOf(+b.dataset.rm), 1); renderRun(); }));
-  const inp = $('#ans');
-  if (inp) {
-    if (!fin) { inp.focus(); inp.addEventListener('input', () => { r.typed = inp.value; $('#act').disabled = !canCheck(); }); }
-    inp.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); act(); } });
-  }
-  $('#act').addEventListener('click', act);
-  if (fin) $('#act').focus();
-}
-function canCheck() {
-  const r = run, e = r.queue[0].e;
-  if (e.t === 'mc') return r.sel != null;
-  if (e.t === 'fill') return (r.typed || '').trim().length > 0;
-  return r.built.length === e.words.length;
-}
-function act() {
-  const r = run, item = r.queue[0], e = item.e;
-  if (r.phase === 'ask') {
-    if (!canCheck()) return;
-    let ok;
-    if (e.t === 'mc') ok = r.sel === e.a;
-    else if (e.t === 'fill') ok = e.a.some((a) => norm(a) === norm(r.typed));
-    else ok = norm(r.built.map((id) => e.words[id]).join(' ')) === norm(e.a);
-    r.lastOk = ok; r.phase = 'fb';
-    const firstTry = !r.seen.has(item);
-    if (firstTry) { r.seen.add(item); if (ok) { r.first++; P.xp += 10; } else { r.miss[item.u] = (r.miss[item.u] || 0) + 1; } }
-    else if (ok) P.xp += 3;
-    touchStreak(); save(); paintStats();
-    if (!ok && firstTry) r.queue.push(item); // one more try at the end
-    renderRun();
-  } else {
-    r.queue.shift();
-    r.phase = 'ask'; r.sel = null; r.typed = ''; r.built = []; r.bank = null;
-    // progress counts distinct questions finished (correct, or retried once)
-    r.i = r.total - new Set(r.queue).size;
-    renderRun();
-  }
-}
-function finishRun() {
-  const r = run, pct = Math.round((r.first / r.total) * 100);
-  if (r.cfg.unit) { const o = P.units[r.cfg.unit] || {}; o.best = Math.max(o.best || 0, pct); P.units[r.cfg.unit] = o; }
-  P.xp += r.cfg.unit ? 20 : 30; save();
-  r.pct = pct; nav('result');
-}
-function renderResult() {
-  const r = run, pct = r.pct;
-  const weak = Object.entries(r.miss).sort((a, b) => b[1] - a[1]);
-  const msg = pct >= 90 ? 'ยอดเยี่ยมมาก!' : pct >= 70 ? 'ดีมาก เกือบเต็มแล้ว' : pct >= 40 ? 'ใช้ได้ ทบทวนกฎอีกนิดจะดีขึ้น' : 'ไม่เป็นไร ลองอ่านกฎแล้วทำใหม่ได้เลย';
-  main.innerHTML = `<div class="runner"><div class="result card" style="--c:var(--present)">
-    <div class="mono muted">${esc(r.cfg.title)}</div><div class="big">${pct}%</div><div>${msg}</div>
-    <div class="muted">ถูกตั้งแต่ครั้งแรก ${r.first} จาก ${r.total} ข้อ · ได้ XP เพิ่ม</div>
-    ${weak.length ? `<div class="weak"><b>ควรทบทวน</b><div class="chips" style="margin-top:8px">${weak.map(([id, n]) => `<button class="chip" data-open="${id}">${esc(BYID[id].title)} (พลาด ${n})</button>`).join('')}</div></div>` : ''}
-    <div class="row" style="justify-content:center"><button class="btn" id="again">ทำอีกครั้ง</button><button class="btn ghost" id="home2">กลับแผนที่</button></div></div></div>`;
-  main.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => nav('unit', { id: b.dataset.open, tab: 'rules' })));
-  $('#again').addEventListener('click', () => {
-    if (r.cfg.unit) startRun({ title: r.cfg.title, line: r.cfg.line, unit: r.cfg.unit, list: r.cfg.list });
-    else { const all = UNITS.flatMap((u) => u.ex.map((e) => ({ e, u: u.id }))); startRun({ title: 'ชาเลนจ์รวม', line: 'present', unit: null, list: shuffle(all).slice(0, 10) }); }
-  });
-  $('#home2').addEventListener('click', () => nav('home'));
-}
-
-$('#home').addEventListener('click', () => nav('home'));
-document.querySelectorAll('.nav button').forEach((b) => b.addEventListener('click', () => nav(b.dataset.v)));
-nav('home');
+function canCheck(){if(!quiz||!quiz.items.length)return false;const e=quiz.items[0].e;if(e.t==='mc')return quiz.sel!=null;if(e.t==='fill')return !!quiz.typed.trim();return quiz.built.length===e.words.length;}
+function act(){const r=quiz,item=r.items[0],e=item.e;if(!r.feedback){if(!canCheck())return;const ok=e.t==='mc'?r.sel===e.a:e.t==='fill'?e.a.some(v=>norm(v)===norm(r.typed)):norm(r.built.map(i=>e.words[i]).join(' '))===norm(e.a);
+ const k=`${item.u}:${item.i}`,first=!r.answered.has(k);if(first){r.answered.add(k);r.done++;if(ok){r.firstCorrect++;progress.xp+=10;}else{r.miss[item.u]=(r.miss[item.u]||0)+1;r.items.push(item);}}else if(ok)progress.xp+=3;touch();save();stats();r.feedback={ok};renderQuiz();}else{r.items.shift();r.feedback=null;r.sel=null;r.typed='';r.built=[];r.bank=null;renderQuiz();}}
+function result(){if(!quiz)return nav('home');const r=quiz,pct=Math.round(r.firstCorrect/r.count*100);if(!r.saved){if(r.unit){const o=progress.units[r.unit]||{};o.best=Math.max(o.best||0,pct);progress.units[r.unit]=o;}progress.xp+=r.unit?20:30;save();r.saved=true;}
+ const comment=pct>=90?'ยอดเยี่ยมมาก!':pct>=70?'ดีมาก!':pct>=40?'ทำได้ดี ลองทบทวนอีกนิด':'ลองอ่านกฎและฝึกอีกครั้ง';$('#app').innerHTML=`<div class="quiz"><div class="card score-box"><span class="eyebrow">RESULT · ${esc(quizTitle())}</span><div class="bigscore">${pct}%</div><h2>${comment}</h2><p class="muted">ถูกตั้งแต่ครั้งแรก ${r.firstCorrect} จาก ${r.count} ข้อ</p>${Object.keys(r.miss).length?`<div style="text-align:left;margin:18px 0"><strong>หัวข้อที่ควรทบทวน</strong><div class="tags" style="margin-top:10px">${Object.entries(r.miss).map(([id,num])=>`<button class="tag" data-review="${id}">${esc(byid[id].title)} · ${num} ข้อ</button>`).join('')}</div></div>`:''}<div class="row result-row"><button class="btn" id="again">ทำอีกครั้ง</button><button class="btn secondary" id="home2">กลับแผนที่</button></div></div></div>`;
+ $('#again').addEventListener('click',()=>startQuiz(r.unit,r.count));$('#home2').addEventListener('click',()=>nav('home'));$('#app').querySelectorAll('[data-review]').forEach(b=>b.addEventListener('click',()=>{unitId=b.dataset.review;tab='rules';nav('lesson');}));stats();}
+listen();nav('home');
+if ('serviceWorker' in navigator && location.protocol === 'https:') {addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 })();
 </script>
-
 </body>
 </html>
